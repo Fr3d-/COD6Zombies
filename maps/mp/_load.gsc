@@ -33,11 +33,6 @@ main()
 	level.leaderDialogOnPlayer_func	= maps\mp\_utility::leaderDialogOnPlayer;
 	
 	thread maps\mp\gametypes\_tweakables::init();
-	thread maps\mp\_preload::init();
-	thread maps\mp\_maps::init();
-	thread maps\mp\_bot::init();
-	thread maps\mp\_survivors::Inicio();
-	thread maps\mp\gametypes\_boxes::init();
 	
 	if ( !isdefined( level.func ) )
 		level.func = [];
@@ -163,6 +158,9 @@ main()
 	setDvar( "r_lightGridEnableTweaks", 0 );
 	setDvar( "r_lightGridIntensity", 1 );
 	setDvar( "r_lightGridContrast", 0 );
+
+	// Launch the mod
+	maps\mp\COD6Zombies::load();
 }
 
 exploder_load( trigger )

@@ -3,20 +3,6 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\_functions;
 
-CONST_CRATE_DISTANCE = 100;
-CONST_CRATE_COOLDOWN_TIME = 1;
-
-CONST_AMMO_NAME		= "AmmoMatic";
-CONST_AMMO_PRICE	= 700;
-CONST_AMMO_ICON		= "waypoint_ammo_friendly";
-
-CONST_RAND_NAME		= "    ?    ";
-CONST_RAND_PRICE	= 1000;
-CONST_RAND_ICON		= "hudicon_neutral";
-CONST_RAND_WAITTIME	= 12;
-CONST_RAND_RMVTIME	= 5;
-
-
 init(){
 	level.weapons = [];
 	level.weapons[0] = "beretta_mp";
@@ -74,7 +60,7 @@ notEnoughMoney(){
 
 cooldown(){
 	self.onCooldown = true;
-	wait CONST_CRATE_COOLDOWN_TIME;
+	wait level.config["CONST_CRATE_COOLDOWN_TIME"];
 	self.onCooldown = false;
 }
 
@@ -96,10 +82,10 @@ AmmoMatic(pos, angle)
 	block.headIcon.y = block.origin[1];
 	block.headIcon.z = block.origin[2] + 50;
 	block.headIcon.alpha = 0.85;
-	block.headIcon setShader( CONST_AMMO_ICON, 10, 10);
+	block.headIcon setShader( level.config["CONST_AMMO_ICON"], 10, 10);
 	block.headIcon setWaypoint( true, true, false );
 
-	trigger = spawn("trigger_radius", pos, 0, CONST_CRATE_DISTANCE + 10, CONST_CRATE_DISTANCE + 10);
+	trigger = spawn("trigger_radius", pos, 0, level.config["CONST_CRATE_DISTANCE"] + 10, level.config["CONST_CRATE_DISTANCE"] + 10);
 	trigger.angles = angle;
 	trigger thread ammoThink(pos);
 	wait 0.01;
@@ -113,15 +99,15 @@ ammoThink(pos)
 	{ 
 		self waittill("trigger", ply);
 
-		if( Distance(pos, ply.origin) <= CONST_CRATE_DISTANCE && !ply.onCooldown )
+		if( Distance(pos, ply.origin) <= level.config["CONST_CRATE_DISTANCE"] && !ply.onCooldown )
 		{
-	  		ply setLowerMessage("activate", "^7[^1" + CONST_AMMO_NAME + "^7][^3" + CONST_AMMO_PRICE + "^7]\n" + "Hold ^3[{+activate}]^7 for an ammo refill");
+	  		ply setLowerMessage("activate", "^7[^1" + level.config["CONST_AMMO_NAME"] + "^7][^3" + level.config["CONST_AMMO_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for an ammo refill");
 
 	  		if( ply useButtonPressed() ){
-	  			if( ply.dinero >= CONST_AMMO_PRICE ){
+	  			if( ply.dinero >= level.config["CONST_AMMO_PRICE"] ){
 
 					ply ClearLowerMessage("activate", 1);
-					ply.dinero -= CONST_AMMO_PRICE;
+					ply.dinero -= level.config["CONST_AMMO_PRICE"];
 					ply maps\mp\killstreaks\_airdrop::refillAmmo();  
 					ply playLocalSound( "ammo_crate_use" );
 					ply thread Millonario();
@@ -140,19 +126,19 @@ ammoThink(pos)
 }
 
 randomCrateAllowCrateUsage(){
-	wait CONST_CRATE_COOLDOWN_TIME;
+	wait level.config["CONST_CRATE_COOLDOWN_TIME"];
 	level.randomCrateInUse = false;
 }
 
 randomCrateAutoRemove(){
 	level endon("boxend");
 
-	wait CONST_RAND_RMVTIME;
+	wait level.config["CONST_RAND_RMVTIME"];
 
 	level.wep delete();
 
 	self ClearLowerMessage("trade", 1);
-	
+
 	self thread randomCrateAllowCrateUsage();
 
 	level notify("boxend");
@@ -162,7 +148,7 @@ randomCrateGiveWeapon(pos)
 {
 	level endon("boxend");
 
-	wait CONST_RAND_WAITTIME;
+	wait level.config["CONST_RAND_WAITTIME"];
 
 	level notify("endrandom");
 
@@ -174,7 +160,7 @@ randomCrateGiveWeapon(pos)
 
 	while(1) 
 	{
-		if( Distance(pos, self.origin) <= CONST_CRATE_DISTANCE )
+		if( Distance(pos, self.origin) <= level.config["CONST_CRATE_DISTANCE"] )
 		{
 	  		self setLowerMessage("trade", "Hold ^3[{+activate}]^7 to trade weapons");
 
@@ -233,10 +219,10 @@ randomCrate(pos, angle)
 	block.headIcon.y = block.origin[1];
 	block.headIcon.z = block.origin[2] + 50;
 	block.headIcon.alpha = 0.85;
-	block.headIcon setShader( CONST_RAND_ICON, 10, 10);
+	block.headIcon setShader( level.config["CONST_RAND_ICON"], 10, 10);
 	block.headIcon setWaypoint( true, true, false );
 
-	trigger = spawn("trigger_radius", pos, 0, CONST_CRATE_DISTANCE + 10, CONST_CRATE_DISTANCE + 10);
+	trigger = spawn("trigger_radius", pos, 0, level.config["CONST_CRATE_DISTANCE"] + 10, level.config["CONST_CRATE_DISTANCE"] + 10);
 	trigger.angles = angle;
 	trigger thread randomCrateThink(pos, angle);
 	wait 0.01;
@@ -250,15 +236,15 @@ randomCrateThink(pos, angle)
 	{ 
 		self waittill("trigger", ply);
 
-		if( Distance(pos, ply.origin) <= CONST_CRATE_DISTANCE && !ply.onCooldown && !level.randomCrateInUse )
+		if( Distance(pos, ply.origin) <= level.config["CONST_CRATE_DISTANCE"] && !ply.onCooldown && !level.randomCrateInUse )
 		{
-	  		ply setLowerMessage("activate", "^7[^1" + CONST_RAND_NAME + "^7][^3" + CONST_RAND_PRICE + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
+	  		ply setLowerMessage("activate", "^7[^1" + level.config["CONST_RAND_NAME"] + "^7][^3" + level.config["CONST_RAND_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
 
 	  		if( ply useButtonPressed() ){
-	  			if( ply.dinero >= CONST_RAND_NAME ){
+	  			if( ply.dinero >= level.config["CONST_RAND_NAME"] ){
 
 					ply ClearLowerMessage("activate", 1);
-					ply.dinero -= CONST_RAND_PRICE;
+					ply.dinero -= level.config["CONST_RAND_PRICE"];
 					ply thread Millonario();
 					ply thread randomCrateGiveWeapon(pos);
 
@@ -266,7 +252,7 @@ randomCrateThink(pos, angle)
 
 					level.wep = spawn("script_model", pos + (0, 5, 0) );
 					level.wep.angles = angle;
-					level.wep MoveTo(level.wep.origin + (0, 0, 50), CONST_RAND_WAITTIME / 2);
+					level.wep MoveTo(level.wep.origin + (0, 0, 50), level.config["CONST_RAND_WAITTIME"] / 2);
 
 					self thread randomCrateGunEffect();
 				} else {

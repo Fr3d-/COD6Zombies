@@ -1,4 +1,4 @@
-init(){
+load(){
 	precacheMpAnim("pb_hold_run");
 	precacheMpAnim("pb_stumble_walk_forward");
 	precacheMpAnim("pb_sprint_shield");
