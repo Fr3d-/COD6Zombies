@@ -1,10 +1,8 @@
+
+// Disables radiation
+
 #include maps\mp\_utility;
 #include common_scripts\utility;
-
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-//////////////////No Radiation////////////////
-/////////////////////////////////////////////////////
 
 radiation()
 {
@@ -64,8 +62,8 @@ soundWatcher( soundOrg )
 radiationEffect()
 {
 	self.poison = 0;
-	wait(55);
 }
+
 blackout( )
 {
 	self endon( "disconnect" );
