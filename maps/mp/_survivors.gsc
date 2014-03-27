@@ -269,32 +269,8 @@ Superviviente()
 	self switchToWeapon("beretta_mp",0,false);
 	self giveMaxAmmo("beretta_mp",0,false);
 	SetPlayerIgnoreRadiusDamage( true );
-	//self thread Delfin();
 	self thread QuickMessages();
 	self thread VisionNocturna();
-}
-
-Delfin() //By Dakota
-{
-        	self endon("dolphindiveoff");
-        	while(1)
-        	{
-                	veloc = self getVelocity();
-                	wait 0.01;
-                	if(abv(veloc[1]) > 100 && self getstance() == "crouch")
-                	{
-                        		self AllowAds(false);
-                       		self thread Caer(100,65,true);
-                        		self setStance("prone");
-                        		self AllowAds(true);
-                          		while(!self isonground())
-                        		{
-                          			wait 0.001;
-                        		}
-                        	self notify("dolphindive");
-                	}
-        	wait 0.001;
-        	}
 }
 
 Caer(force,height,slide)
