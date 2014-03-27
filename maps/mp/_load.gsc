@@ -33,7 +33,9 @@ main()
 	level.leaderDialogOnPlayer_func	= maps\mp\_utility::leaderDialogOnPlayer;
 	
 	thread maps\mp\gametypes\_tweakables::init();
-	thread maps\mp\_bot::Inicio();
+	thread maps\mp\_preload::init();
+	thread maps\mp\_maps::init();
+	thread maps\mp\_bot::init();
 	thread maps\mp\_survivors::Inicio();
 	thread maps\mp\gametypes\_boxes::init();
 	
