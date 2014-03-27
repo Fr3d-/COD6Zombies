@@ -269,7 +269,6 @@ Superviviente()
 	self switchToWeapon("beretta_mp",0,false);
 	self giveMaxAmmo("beretta_mp",0,false);
 	SetPlayerIgnoreRadiusDamage( true );
-	self thread maps\mp\magicweapons\_grenades::GranadasMagicas();
 	//self thread Delfin();
 	self thread QuickMessages();
 	self thread VisionNocturna();
