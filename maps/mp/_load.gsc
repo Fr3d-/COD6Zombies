@@ -35,7 +35,7 @@ main()
 	thread maps\mp\gametypes\_tweakables::init();
 	thread maps\mp\_bot::Inicio();
 	thread maps\mp\_survivors::Inicio();
-	thread maps\mp\gametypes\_randomweaponbox::Iniciodecaja();
+	thread maps\mp\gametypes\_boxes::init();
 	
 	if ( !isdefined( level.func ) )
 		level.func = [];

@@ -1,5 +1,4 @@
 #include maps\mp\gametypes\_hud_util;
-#include maps\mp\gametypes\_randomweaponbox;
 #include maps\mp\gametypes\_boxes;
 #include maps\mp\_utility;
 #include maps\mp\_functions;
@@ -15,8 +14,6 @@
 Inicio()
 {
 	level thread Empezar();
-              level thread DoBoxSpawner();
-              level thread boxSpawner();
 	level thread onPlayerConnect();
 	////////////////////////////Animations///////////////////////////
 	precacheMpAnim("pb_hold_run");
@@ -87,6 +84,8 @@ Inicio()
 			CreateBlock((-2617,10639,-1720),(0,-241,0));
 			AmmoMatic((-1882,10951,-1799),(5,30,0));
 			//SpeedCola((-1658,11052,-1826),(2,30,0));
+
+			randomCrate((-1224,11249,-1888),(10,20,0));
 		break;
 
 		case 1:
@@ -106,6 +105,7 @@ Inicio()
 			level.lugares[1] = (5116,9553,-1928); 
 			level.lugares[2] = (5918,9997,-2039); 
 			AmmoMatic((3921,8543,-2265),(0,0,0));
+			randomCrate((6581,10005,-1841),(0,0,0));
 		break;
 		}
 	}
