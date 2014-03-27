@@ -8,7 +8,7 @@ init()
 	level.perkFuncs = [];
 
 	precacheShader( "combathigh_overlay" );	
-	precacheShader( "specialty_painkiller" );
+	precacheShader( "cardicon_juggernaut_2" );
 
 	precacheModel( "weapon_riot_shield_mp" );	
 	precacheModel( "viewmodel_riot_shield_mp" );
@@ -337,8 +337,7 @@ cac_modified_damage( victim, attacker, damage, meansofdeath, weapon, impactPoint
 				self.damageBlockedTotal = undefined;
 			}
 		}
-
-		if ( weapon != "throwingknife_mp" )
+			if ( weapon != "throwingknife_mp" )
 		{
 			switch ( meansOfDeath )
 			{
@@ -355,7 +354,7 @@ cac_modified_damage( victim, attacker, damage, meansofdeath, weapon, impactPoint
 	
 	return int( damage + damageAdd );
 }
-
+	
 initPerkDvars()
 {	
 	level.bulletDamageMod = getIntProperty( "perk_bulletDamage", 40 )/100;			// increased bullet damage by this %

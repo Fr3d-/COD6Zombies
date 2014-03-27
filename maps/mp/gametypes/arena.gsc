@@ -1,32 +1,10 @@
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
-/*
-	Arena
-	Objective: 	Eliminate the enemy team
-	Map ends:	When one team eliminates the enemy team, or the flag is reached
-	Respawning:	Beginning of next round
 
-	Level requirementss
-	------------------
-		Spawnpoints:
-			classname		mp_tdm_spawn
-			All players spawn from these. The spawnpoint chosen is dependent on the current locations of teammates and enemies
-			at the time of spawn. Players generally spawn behind their teammates relative to the direction of enemies.
-
-		Spectator Spawnpoints:
-			classname		mp_global_intermission
-			Spectators spawn from these and intermission is viewed from these positions.
-			Atleast one is required, any more and they are randomly chosen between.
-*/
-
-/*QUAKED mp_tdm_spawn (0.0 0.0 1.0) (-16 -16 0) (16 16 72)
-Players spawn away from enemies and near their team at one of these positions.*/
-
-/*QUAKED mp_tdm_spawn_axis_start (0.5 0.0 1.0) (-16 -16 0) (16 16 72)
-Axis players spawn away from enemies and near their team at one of these positions at the start of a round.*/
-
-/*QUAKED mp_tdm_spawn_allies_start (0.0 0.5 1.0) (-16 -16 0) (16 16 72)
-Allied players spawn away from enemies and near their team at one of these positions at the start of a round.*/
+//////////////////////////////////////
+//////////////////////////////////////
+//////Capture the OMA//////
+//////////////////////////////////////
 
 main()
 {
@@ -71,6 +49,7 @@ main()
 
 onPrecacheGameType()
 {
+	precacheShader( "specialty_onemanarmy" );
 	precacheShader( "compass_waypoint_captureneutral" );
 	precacheShader( "compass_waypoint_capture" );
 	precacheShader( "compass_waypoint_defend" );
@@ -78,6 +57,9 @@ onPrecacheGameType()
 	precacheShader( "waypoint_captureneutral" );
 	precacheShader( "waypoint_capture" );
 	precacheShader( "waypoint_defend" );
+
+        level.teleFX["red"] = loadfx( maps\mp\gametypes\_teams::getTeamFlagFX( "axis" ) );
+        level.teleFX["grey"] = loadfx( maps\mp\gametypes\_teams::getTeamFlagFX( "allies" ) );
 
 }
 
@@ -137,10 +119,10 @@ onStartGameType()
 precacheFlag()
 {
 	game["flagmodels"] = [];
-	game["flagmodels"]["neutral"] = "prop_flag_neutral";
+	game["flagmodels"]["neutral"] = "weapon_oma_pack_in_hand";
 
-	game["flagmodels"]["allies"] = maps\mp\gametypes\_teams::getTeamFlagModel( "allies" );
-	game["flagmodels"]["axis"] = maps\mp\gametypes\_teams::getTeamFlagModel( "axis" );
+	game["flagmodels"]["allies"] = "weapon_oma_pack";
+	game["flagmodels"]["axis"] =  "weapon_oma_pack";
 	
 	precacheModel( game["flagmodels"]["neutral"] );
 	precacheModel( game["flagmodels"]["allies"] );
@@ -300,7 +282,9 @@ arenaFlag()
 		
 	arenaFlag = getEntArray("flag_arena", "targetname");
 	primaryFlags = getEntArray( "flag_primary", "targetname" );
-	secondaryFlags = getEntArray( "flag_secondary", "targetname" );
+ 	secondaryFlags = getEntArray( "flag_secondary", "targetname" );
+
+ 
 	
 	// check to see if arena flag is present otherwise throw a warning and use the dom Flag.
 	if ( !isDefined( arenaFlag[0] ) )
@@ -320,14 +304,16 @@ arenaFlag()
 		level.arenaFlag = arenaFlag[0];
 	
 	trigger = level.arenaFlag;
+
 	if ( isDefined( trigger.target ) )
 	{
 		visuals[0] = getEnt( trigger.target, "targetname" );
 	}
 	else
 	{
-		visuals[0] = spawn( "script_model", trigger.origin );
+		visuals[0] = spawn( "script_model", trigger.origin +(0,0,60) );
 		visuals[0].angles = trigger.angles;
+		
 	}
 
 	visuals[0] setModel( game["flagmodels"]["neutral"] );
@@ -340,7 +326,8 @@ arenaFlag()
 	arenaFlag.label = label;
 	arenaFlag maps\mp\gametypes\_gameobjects::set2DIcon( "friendly", "compass_waypoint_defend");
 	arenaFlag maps\mp\gametypes\_gameobjects::set3DIcon( "friendly", "waypoint_defend");
-	arenaFlag maps\mp\gametypes\_gameobjects::set2DIcon( "enemy", "compass_waypoint_captureneutral");
+	//arenaFlag maps\mp\gametypes\_gameobjects::set2DIcon( "enemy", getDvarInt( "scr_nukeTimer" ));
+	arenaFlag maps\mp\gametypes\_gameobjects::set2DIcon( "enemy", "specialty_onemanarmy");
 	arenaFlag maps\mp\gametypes\_gameobjects::set3DIcon( "enemy", "waypoint_captureneutral");
 	arenaFlag maps\mp\gametypes\_gameobjects::setVisibleTeam( "any" );
 	arenaFlag.onUse = ::onUse;

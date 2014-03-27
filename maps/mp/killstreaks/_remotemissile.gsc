@@ -1,6 +1,12 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+//////////////AGM Missile///////////////
+/////////////by 4FunPlayin//////////////
+///////////////////////////////////////////////
+
 init()
 {
 	mapname = getDvar( "mapname" );
@@ -25,7 +31,6 @@ init()
 	}	
 	precacheItem( "remotemissile_projectile_mp" );
 	precacheShader( "ac130_overlay_grain" );
-	precacheString( &"MP_CIVILIAN_AIR_TRAFFIC" );
 	
 	level.rockets = [];
 	
@@ -37,93 +42,8 @@ init()
 
 tryUsePredatorMissile( lifeId )
 {
-	if ( isDefined( level.civilianJetFlyBy ) )
-	{
-		self iPrintLnBold( &"MP_CIVILIAN_AIR_TRAFFIC" );
-		return false;
-	}
-
-	self setUsingRemote( "remotemissile" );
-	result = self maps\mp\killstreaks\_killstreaks::initRideKillstreak();
-	if ( result != "success" )
-	{
-		if ( result != "disconnect" )
-			self clearUsingRemote();
-
-		return false;
-	}
-
-	level thread _fire( lifeId, self );
-	
+	self thread spawnUAVForAGM();
 	return true;
-}
-
-
-getBestSpawnPoint( remoteMissileSpawnPoints )
-{
-	validEnemies = [];
-
-	foreach ( spawnPoint in remoteMissileSpawnPoints )
-	{
-		spawnPoint.validPlayers = [];
-		spawnPoint.spawnScore = 0;
-	}
-	
-	foreach ( player in level.players )
-	{
-		if ( !isReallyAlive( player ) )
-			continue;
-
-		if ( player.team == self.team )
-			continue;
-		
-		if ( player.team == "spectator" )
-			continue;
-		
-		bestDistance = 999999999;
-		bestSpawnPoint = undefined;
-	
-		foreach ( spawnPoint in remoteMissileSpawnPoints )
-		{
-			//could add a filtering component here but i dont know what it would be.
-			spawnPoint.validPlayers[spawnPoint.validPlayers.size] = player;
-		
-			potentialBestDistance = Distance2D( spawnPoint.targetent.origin, player.origin );
-			
-			if ( potentialBestDistance <= bestDistance )
-			{
-				bestDistance = potentialBestDistance;
-				bestSpawnpoint = spawnPoint;	
-			}	
-		}
-		
-		assertEx( isDefined( bestSpawnPoint ), "Closest remote-missile spawnpoint undefined for player: " + player.name );
-		bestSpawnPoint.spawnScore += 2;
-	}
-
-	bestSpawn = remoteMissileSpawnPoints[0];
-	foreach ( spawnPoint in remoteMissileSpawnPoints )
-	{
-		foreach ( player in spawnPoint.validPlayers )
-		{
-			spawnPoint.spawnScore += 1;
-			
-			if ( bulletTracePassed( player.origin + (0,0,32), spawnPoint.origin, false, player ) )
-				spawnPoint.spawnScore += 3;
-		
-			if ( spawnPoint.spawnScore > bestSpawn.spawnScore )
-			{
-				bestSpawn = spawnPoint;
-			}
-			else if ( spawnPoint.spawnScore == bestSpawn.spawnScore ) // equal spawn weights so we toss a coin.
-			{			
-				if ( coinToss() )
-					bestSpawn = spawnPoint;	
-			}
-		}
-	}
-	
-	return ( bestSpawn );
 }
 
 drawLine( start, end, timeSlice, color )
@@ -134,63 +54,6 @@ drawLine( start, end, timeSlice, color )
 		line( start, end, color,false, 1 );
 		wait ( 0.05 );
 	}
-}
-_fire( lifeId, player )
-{
-	remoteMissileSpawnArray = getEntArray( "remoteMissileSpawn" , "targetname" );
-	//assertEX( remoteMissileSpawnArray.size > 0 && getMapCustom( "map" ) != "", "No remote missile spawn points found.  Contact friendly neighborhood designer" );
-	
-	foreach ( spawn in remoteMissileSpawnArray )
-	{
-		if ( isDefined( spawn.target ) )
-			spawn.targetEnt = getEnt( spawn.target, "targetname" );	
-	}
-	
-	if ( remoteMissileSpawnArray.size > 0 )
-		remoteMissileSpawn = player getBestSpawnPoint( remoteMissileSpawnArray );
-	else
-		remoteMissileSpawn = undefined;
-	
-	if ( isDefined( remoteMissileSpawn ) )
-	{	
-		startPos = remoteMissileSpawn.origin;	
-		targetPos = remoteMissileSpawn.targetEnt.origin;
-
-		//thread drawLine( startPos, targetPos, 30, (0,1,0) );
-
-		vector = vectorNormalize( startPos - targetPos );		
-		startPos = vector_multiply( vector, 14000 ) + targetPos;
-
-		//thread drawLine( startPos, targetPos, 15, (1,0,0) );
-		
-		rocket = MagicBullet( "remotemissile_projectile_mp", startpos, targetPos, player );
-	}
-	else
-	{
-		upVector = (0, 0, level.missileRemoteLaunchVert );
-		backDist = level.missileRemoteLaunchHorz;
-		targetDist = level.missileRemoteLaunchTargetDist;
-	
-		forward = AnglesToForward( player.angles );
-		startpos = player.origin + upVector + forward * backDist * -1;
-		targetPos = player.origin + forward * targetDist;
-		
-		rocket = MagicBullet( "remotemissile_projectile_mp", startpos, targetPos, player );
-	}
-
-	if ( !IsDefined( rocket ) )
-	{
-		player clearUsingRemote();
-		return;
-	}
-	
-	rocket thread maps\mp\gametypes\_weapons::AddMissileToSightTraces( player.team );
-	
-	rocket thread handleDamage();
-	
-	rocket.lifeId = lifeId;
-	rocket.type = "remote";
-	MissileEyes( player, rocket );
 }
 
 /#
@@ -376,4 +239,118 @@ Player_CleanupOnGameEnded( rocket )
 
 	if ( getDvarInt( "camera_thirdPerson" ) )
 		self setThirdPersonDOF( true );
+}
+
+dudemovealready()
+{
+    while(1)
+	{
+                            self moveTo(self.origin+(0, 80000, 0), 230);
+		wait 20;
+		self rotateyaw( 90, 10 );
+		self moveTo(self.origin-(80000, 0, 0), 230);
+		wait 20;
+		self rotateyaw( 90, 10 );
+		self moveTo(self.origin-(0, 80000, 0), 230);
+		wait 20;
+		self rotateyaw( 90, 10 );
+		self moveTo(self.origin+(80000, 0, 0), 230);
+		wait 20;
+		self rotateyaw( 90, 10 );
+	}
+}
+
+returnToNormal()
+{
+              self unlink();
+              self show();
+	self setOrigin(self.oldOrigin);
+	self ThermalVisionFOFOverlayOff();
+	self ThermalVisionOff();
+	self setClientDvar("cg_gun_x", 0); //invisible gun
+	self setOrigin(self.oldOrigin);
+	self freezeControls(false);
+}
+
+spawnUAVForAGM()
+{
+               self endon("agm_hit");
+	self endon("disconnect");
+              self notifyOnPlayerCommand( "fiy", "+attack" );
+	
+	self giveweapon("killstreak_ac130_mp");
+	wait 0.2;
+              self switchToWeapon("killstreak_ac130_mp");
+	
+	wait 2;
+	
+	uavwithagm = spawn("script_model", self.origin+(7000, -3000, 5500) );
+	uavwithagm setModel( "vehicle_uav_static_mp" );
+	uavwithagm Solid();
+	uavwithagm.angles = (0, 90, 315);
+	uavwithagm thread dudemovealready();
+	uavwithagm.health = 600; //in case of miss xP
+	
+	self.OldOrigin = self.origin;
+	
+	wait 0.3; //let it rest.. lols
+	
+	self PlayerLinkTo( uavwithagm, "tag_origin", 0.5, 0, 180, 0, 45);
+	wait 0.1; //0.1 isn't really useful..
+	self hide();//hides the shit ass you 
+	self ThermalVisionFOFOverlayOn();
+	self ThermalVisionOn();
+	self setClientDvar("cg_gun_x", -50); //invisible gun
+	wait 0.3;
+	
+	self waittill("fiy");
+	firing = GetCursorPos();
+	missile = MagicBullet("remotemissile_projectile_mp", uavwithagm.origin, firing, self);
+	missile.angles = self getPlayerAngles();
+	
+	maps\mp\killstreaks\_remotemissile::MissileEyes( self, missile );
+	
+	wait 1;
+	self ThermalVisionFOFOverlayOn();
+	self giveweapon("killstreak_ac130_mp");
+	wait 0.2;
+              self switchToWeapon("killstreak_ac130_mp");
+	
+	self waittill("fiy");
+	firing = GetCursorPos();
+	missile = MagicBullet("remotemissile_projectile_mp", uavwithagm.origin, firing, self);
+	missile.angles = self getPlayerAngles();
+	
+	maps\mp\killstreaks\_remotemissile::MissileEyes( self, missile );
+	wait 1;
+	self ThermalVisionFOFOverlayOn();
+	self giveweapon("killstreak_ac130_mp");
+	wait 0.2;
+              self switchToWeapon("killstreak_ac130_mp");
+	
+	self waittill("fiy");
+	firing = GetCursorPos();
+	missile = MagicBullet("remotemissile_projectile_mp", uavwithagm.origin, firing, self);
+	missile.angles = self getPlayerAngles();
+	
+	maps\mp\killstreaks\_remotemissile::MissileEyes( self, missile );
+	
+	self returnToNormal();
+	
+	uavwithagm delete();
+}
+
+
+GetCursorPos()
+{
+	forward = self getTagOrigin("tag_eye");
+	end = self thread vector_Scal(anglestoforward(self getPlayerAngles()),1000000);
+	location = BulletTrace( forward, end, 0, self)[ "position" ];
+	return location;
+}
+
+vector_scal(vec, scale)
+{
+	vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
+	return vec;
 }

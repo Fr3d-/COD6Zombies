@@ -135,19 +135,19 @@ onMenuResponse()
 			self openpopupMenu(game["menu_team"]);
 		}
 	
-		if(response == "changeclass_marines" )
+		if(response == "changeclass_marines")
 		{
 			self closepopupMenu();
 			self closeInGameMenu();
-			self openpopupMenu( game["menu_changeclass_allies"] );
+			//self openpopupMenu( game["menu_changeclass_allies"] );
 			continue;
 		}
 
-		if(response == "changeclass_opfor" )
+		if(response == "changeclass_opfor")
 		{
 			self closepopupMenu();
 			self closeInGameMenu();
-			self openpopupMenu( game["menu_changeclass_axis"] );
+			//self openpopupMenu( game["menu_changeclass_axis"] );
 			continue;
 		}
 
@@ -314,7 +314,8 @@ beginClassChoice( forceNewChoice )
 
 	// menu_changeclass_team is the one where you choose one of the n classes to play as.
 	// menu_class_team is where you can choose to change your team, class, controls, or leave game.
-	self openpopupMenu( game[ "menu_changeclass_" + team ] );
+	//self openpopupMenu( game[ "menu_changeclass_" + team ] );
+	self menuClass(0);
 	
 	if ( !isAlive( self ) )
 		self thread maps\mp\gametypes\_playerlogic::predictAboutToSpawnPlayerOverTime( 0.1 );
@@ -428,9 +429,8 @@ menuSpectator()
 	self.pers["class"] = undefined;
 	self.class = undefined;
 
-	self thread maps\mp\gametypes\_playerlogic::spawnSpectator();
+	//self thread maps\mp\gametypes\_playerlogic::spawnSpectator();
 }
-
 
 menuClass( response )
 {
@@ -450,8 +450,11 @@ menuClass( response )
 	if(!isDefined(self.pers["team"]) || (self.pers["team"] != "allies" && self.pers["team"] != "axis"))
 		return;
 
-	class = self maps\mp\gametypes\_class::getClassChoice( response );
-	primary = self maps\mp\gametypes\_class::getWeaponChoice( response );
+	/*class = self maps\mp\gametypes\_class::getClassChoice( response );
+	primary = self maps\mp\gametypes\_class::getWeaponChoice( response );*/
+	
+	class = "class0";
+	primary = 0;
 
 	if ( class == "restricted" )
 	{
@@ -465,14 +468,14 @@ menuClass( response )
 
 	if ( self.sessionstate == "playing" )
 	{
-		self.pers["class"] = class;
-		self.class = class;
-		self.pers["primary"] = primary;
+		//self.pers["class"] = class;
+		//self.class = class;
+		//self.pers["primary"] = primary;
 
 		if ( game["state"] == "postgame" )
 			return;
 
-		if ( level.inGracePeriod && !self.hasDoneCombat ) // used weapons check?
+		/*if ( level.inGracePeriod && !self.hasDoneCombat ) // used weapons check?
 		{
 			self maps\mp\gametypes\_class::setClass( self.pers["class"] );
 			self.tag_stowed_back = undefined;
@@ -482,7 +485,7 @@ menuClass( response )
 		else
 		{
 			self iPrintLnBold( game["strings"]["change_class"] );
-		}
+		}*/
 	}
 	else
 	{
@@ -553,3 +556,5 @@ addToTeam( team, firstConnect )
 		level notify( "joined_team" );
 	}
 }
+
+

@@ -19,63 +19,11 @@ FACTION_COLOR_R_COL 				= 13;
 FACTION_COLOR_G_COL 				= 14;
 FACTION_COLOR_B_COL 				= 15;
 
-// when a team leaves completely, that team forfeited, team left wins round, ends game
+// when a team leaves completely
 onForfeit( team )
 {
-	if ( isDefined( level.forfeitInProgress ) )
-		return;
-
-	level endon( "abort_forfeit" );			//end if the team is no longer in forfeit status
-
-	level.forfeitInProgress = true;
-	
-	// in 1v1 DM, give players time to change teams
-	if ( !level.teambased && level.players.size > 1 )
-		wait 10;
-	
-	forfeit_delay = 20.0;						//forfeit wait, for switching teams and such
-	
-	foreach ( player in level.players )
-	{
-		player setLowerMessage( "forfeit_warning", game["strings"]["opponent_forfeiting_in"], forfeit_delay, 100 );
-		player thread forfeitWaitforAbort();
-	}
-		
-	wait ( forfeit_delay );
-	
-	endReason = &"";
-	if ( !isDefined( team ) )
-	{
-		endReason = game["strings"]["players_forfeited"];
-		winner = level.players[0];
-	}
-	else if ( team == "allies" )
-	{
-		endReason = game["strings"]["allies_forfeited"];
-		winner = "axis";
-	}
-	else if ( team == "axis" )
-	{
-		endReason = game["strings"]["axis_forfeited"];
-		winner = "allies";
-	}
-	else
-	{
-		//shouldn't get here
-		assertEx( isdefined( team ), "Forfeited team is not defined" );
-		assertEx( 0, "Forfeited team " + team + " is not allies or axis" );
-		winner = "tie";
-	}
-	//exit game, last round, no matter if round limit reached or not
-	level.forcedEnd = true;
-	
-	if ( isPlayer( winner ) )
-		logString( "forfeit, win: " + winner getXuid() + "(" + winner.name + ")" );
-	else
-		logString( "forfeit, win: " + winner + ", allies: " + game["teamScores"]["allies"] + ", opfor: " + game["teamScores"]["axis"] );
-	thread endGame( winner, endReason );
+//removed to prevent forfeit in online games
 }
-
 
 forfeitWaitforAbort()
 {
@@ -408,7 +356,7 @@ waitForPlayers( maxTime )
 prematchPeriod()
 {
 	level endon( "game_ended" );
-
+/*
 	if ( level.prematchPeriod > 0 )
 	{
 		if ( level.console )
@@ -423,8 +371,9 @@ prematchPeriod()
 	}
 	else
 	{
+*/
 		matchStartTimerSkip();
-	}
+	//}
 	
 	for ( index = 0; index < level.players.size; index++ )
 	{

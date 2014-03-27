@@ -2,11 +2,16 @@
 #include maps\mp\gametypes\_hud_util;
 #include common_scripts\utility;
 
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+/////////Custom Sentry Gun////////
+/////////////////////////////////////////////
+
 SENTRY_MODE_ON			= "sentry";
 SENTRY_MODE_OFF			= "sentry_offline";
-SENTRY_TIME_OUT			= 90.0;
+SENTRY_TIME_OUT			= 75.0;
 SENTRY_SPINUP_TIME		= .05;
-SENTRY_OVERHEAT_TIME	= 8.0;
+SENTRY_OVERHEAT_TIME	= 0.05;
 SENTRY_FX_TIME			= .3;
 
 init()
@@ -19,10 +24,6 @@ init()
 	level.sentrySettings = [];
 	
 	level.sentrySettings[ "sentry_minigun" ] = spawnStruct();
-	level.sentrySettings[ "sentry_minigun" ].burstMin = 20;
-	level.sentrySettings[ "sentry_minigun" ].burstMax = 120;
-	level.sentrySettings[ "sentry_minigun" ].pauseMin = 0.15;
-	level.sentrySettings[ "sentry_minigun" ].pauseMax = 0.35;
 	level.sentrySettings[ "sentry_minigun" ].weaponInfo = "sentry_minigun_mp";
 	level.sentrySettings[ "sentry_minigun" ].modelBase = "sentry_minigun";
 	level.sentrySettings[ "sentry_minigun" ].modelPlacement = "sentry_minigun_obj";
@@ -75,7 +76,6 @@ giveSentry( sentryType )
 	
 	self setCarryingSentry( sentryGun, true );
 	
-	// if we failed to place the sentry, it will have been deleted at this point
 	if ( isDefined( sentryGun ) )
 		return true;
 	else
@@ -126,6 +126,10 @@ setCarryingSentry( sentryGun, allowCancel )
 	}
 }
 
+defaultAngles()
+{
+self setPlayerAngles(self.angles+(0,0,0));
+}
 
 /* ============================
 	Sentry Functions
@@ -137,6 +141,7 @@ createSentryForPlayer( sentryType, owner )
 
 	sentryGun = spawnTurret( "misc_turret", owner.origin, level.sentrySettings[ sentryType ].weaponInfo );
 	sentryGun.angles = owner.angles;
+	sentryGun LaserOn();
 	
 	sentryGun sentry_initSentry( sentryType, owner );
 	
@@ -152,22 +157,16 @@ sentry_initSentry( sentryType, owner )
 	self.health = 1000;
 	
 	self setCanDamage( true );
-	self makeTurretInoperable();
 	
 	self setTurretModeChangeWait( true );
-//	self setConvergenceTime( .25, "pitch" );
-//	self setConvergenceTime( .25, "yaw" );
 	self sentry_setInactive();
-	self setDefaultDropPitch( -89.0 );	// setting this mainly prevents Turret_RestoreDefaultDropPitch() from running
+	self setDefaultDropPitch( -89.0 );
 	
 	self sentry_setOwner( owner );
 	self thread sentry_handleOwner();
 	self thread sentry_handleDamage();
 	self thread sentry_handleDeath();
-	self thread sentry_handleUse();
 	self thread sentry_timeOut();
-	self thread sentry_attackTargets();
-	self thread sentry_beepSounds();
 }
 
 
@@ -177,7 +176,6 @@ sentry_initSentry( sentryType, owner )
 
 sentry_handleDamage()
 {
-	// use a health buffer to prevent the turret from dying to friendly fire
 	healthBuffer = 20000;
 	self.health += healthbuffer;
 
@@ -191,7 +189,6 @@ sentry_handleDamage()
 			continue;
 		}
 
-		// 7x damage for explosives - GRENADES
 		if ( isExplosiveDamage( type ) )
 			self.health -= (amount * 1);
 			
@@ -237,13 +234,13 @@ sentry_handleDeath()
 	self waittill ( "death" );
 
 	self removeFromTurretList( entNum );
-	// this handles cases of deletion
 	if ( !isDefined( self ) )
 		return;
 		
 	self setModel( level.sentrySettings[ self.sentryType ].modelDestroyed );
 
 	self sentry_setInactive();
+      self makeTurretInoperable();
 	self setDefaultDropPitch( 40 );
 	self SetSentryOwner( undefined );
 	self SetTurretMinimapVisible( false );
@@ -251,7 +248,6 @@ sentry_handleDeath()
 	self playSound( "sentry_explode" );
 	playFxOnTag( getFx( "sentry_explode_mp" ), self, "tag_aim" );
 
-	// don't try to delete ourselves if we're deleted by other means
 	self endon ( "death" );
 
 	wait ( 1.5 );
@@ -265,27 +261,6 @@ sentry_handleDeath()
 
 	self delete();
 }
-
-
-sentry_handleUse()
-{
-	self endon ( "death" );
-	level endon ( "game_ended" );
-	
-	for ( ;; )
-	{
-		self waittill ( "trigger", player );
-		
-		assert( player == self.owner );
-		assert( !isDefined( self.carriedBy ) );
-
-		if ( !isReallyAlive( player ) )
-			continue;
-		
-		player setCarryingSentry( self, false );
-	}
-}
-
 
 sentry_handleOwner()
 {
@@ -378,41 +353,24 @@ sentry_setCarried( carrier )
 
 updateSentryPlacement( sentryGun )
 {
-	self endon ( "death" );
-	self endon ( "disconnect" );
-	level endon ( "game_ended" );
-	
-	sentryGun endon ( "placed" );
-	sentryGun endon ( "death" );
-	
-	sentryGun.canBePlaced = true;
-	lastCanPlaceSentry = -1; // force initial update
+        self endon ( "death" );
+        self endon ( "disconnect" );
+        level endon ( "game_ended" );
+        
+        sentryGun endon ( "placed" );
+        sentryGun endon ( "death" );
+        
+        sentryGun setModel( level.sentrySettings[ sentryGun.sentryType ].modelPlacement );
+        self ForceUseHintOn( &"SENTRY_PLACE" );
 
-	for( ;; )
-	{
-		placement = self canPlayerPlaceSentry();
+        for( ;; )
+        {
+                placement = self canPlayerPlaceSentry();
 
-		sentryGun.origin = placement[ "origin" ];
-		sentryGun.angles = placement[ "angles" ];
-		sentryGun.canBePlaced = self isOnGround() && placement[ "result" ];
-	
-		if ( sentryGun.canBePlaced != lastCanPlaceSentry )
-		{
-			if ( sentryGun.canBePlaced )
-			{
-				sentryGun setModel( level.sentrySettings[ sentryGun.sentryType ].modelPlacement );
-				self ForceUseHintOn( &"SENTRY_PLACE" );
-			}
-			else
-			{
-				sentryGun setModel( level.sentrySettings[ sentryGun.sentryType ].modelPlacementFailed );
-				self ForceUseHintOn( &"SENTRY_CANNOT_PLACE" );
-			}
-		}
-		
-		lastCanPlaceSentry = sentryGun.canBePlaced;		
-		wait ( 0.05 );
-	}
+                sentryGun.origin = placement[ "origin" ];
+                sentryGun.angles = placement[ "angles" ];       
+                wait ( 0.05 );
+        }
 }
 
 sentry_onCarrierDeath( carrier )
@@ -466,11 +424,6 @@ sentry_setActive()
 		else
 			self disablePlayerUse( player );	
 	}	
-
-	if ( level.teamBased )
-		self maps\mp\_entityheadicons::setTeamHeadIcon( self.team, (0,0,65) );
-	else
-		self maps\mp\_entityheadicons::setPlayerHeadIcon( self.owner, (0,0,65) );
 }
 
 
@@ -478,13 +431,7 @@ sentry_setInactive()
 {
 	self setMode( SENTRY_MODE_OFF );
 	self makeUnusable();
-
-	if ( level.teamBased )
-		self maps\mp\_entityheadicons::setTeamHeadIcon( "none", ( 0, 0, 0 ) );
-	else if ( isDefined( self.owner ) )
-		self maps\mp\_entityheadicons::setPlayerHeadIcon( undefined, ( 0, 0, 0 ) );
 }
-
 
 sentry_makeSolid()
 {
@@ -522,34 +469,6 @@ removeFromTurretList( entNum )
 	Sentry Logic Functions
    ============================ */
 
-sentry_attackTargets()
-{
-	self endon( "death" );
-	level endon( "game_ended" );
-
-	self.momentum = 0;
-	self.heatLevel = 0;
-	self.overheated = false;
-	
-	self thread sentry_heatMonitor();
-	
-	for ( ;; )
-	{
-		self waittill_either( "turretstatechange", "cooled" );
-
-		if ( self isFiringTurret() )
-		{
-			self thread sentry_burstFireStart();
-		}
-		else
-		{
-			self sentry_spinDown();
-			self thread sentry_burstFireStop();
-		}
-	}
-}
-
-
 sentry_timeOut()
 {
 	self endon( "death" );
@@ -570,134 +489,4 @@ sentry_timeOut()
 		self.owner thread leaderDialogOnPlayer( "sentry_gone" );
 	
 	self notify ( "death" );
-}
-
-sentry_targetLockSound()
-{
-	self endon ( "death" );
-	
-	self playSound( "sentry_gun_beep" );
-	wait ( 0.1 );
-	self playSound( "sentry_gun_beep" );
-	wait ( 0.1 );
-	self playSound( "sentry_gun_beep" );
-}
-
-sentry_spinUp()
-{
-	self thread sentry_targetLockSound();
-	
-	while ( self.momentum < SENTRY_SPINUP_TIME )
-	{
-		self.momentum += 0.1;
-		
-		wait ( 0.1 );
-	}
-}
-
-sentry_spinDown()
-{
-	self.momentum = 0;
-}
-
-
-sentry_burstFireStart()
-{
-	self endon( "death" );
-	self endon( "stop_shooting" );
-
-	level endon( "game_ended" );
-
-	self sentry_spinUp();
-
-	fireTime = weaponFireTime( level.sentrySettings[ self.sentryType ].weaponInfo );
-	minShots = level.sentrySettings[ self.sentryType ].burstMin;
-	maxShots = level.sentrySettings[ self.sentryType ].burstMax;
-	minPause = level.sentrySettings[ self.sentryType ].pauseMin;
-	maxPause = level.sentrySettings[ self.sentryType ].pauseMax;
-
-	for ( ;; )
-	{		
-		numShots = randomIntRange( minShots, maxShots + 1 );
-		
-		for ( i = 0; i < numShots && !self.overheated; i++ )
-		{
-			self shootTurret();
-			self.heatLevel += fireTime;
-			wait ( fireTime );
-		}
-		
-		wait ( randomFloatRange( minPause, maxPause ) );
-	}
-}
-
-
-sentry_burstFireStop()
-{
-	self notify( "stop_shooting" );
-}
-
-
-sentry_heatMonitor()
-{
-	self endon ( "death" );
-
-	fireTime = weaponFireTime( level.sentrySettings[ self.sentryType ].weaponInfo );
-
-	lastHeatLevel = 0;
-	lastFxTime = 0;
-
-	for ( ;; )
-	{
-		if ( self.heatLevel != lastHeatLevel )
-			wait ( fireTime );
-		else
-			self.heatLevel = max( 0, self.heatLevel - 0.05 );
-
-		if ( self.heatLevel > SENTRY_OVERHEAT_TIME )
-		{
-			self.overheated = true;
-			self thread PlayHeatFX();
-			
-			while ( self.heatLevel )
-			{
-				self.heatLevel = max( 0, self.heatLevel - 0.1 );	
-				wait ( 0.1 );
-			}
-
-			self.overheated = false;
-			self notify( "not_overheated" );
-		}
-
-		lastHeatLevel = self.heatLevel;
-		wait ( 0.05 );
-	}
-}
-
-playHeatFX()
-{
-	self endon( "death" );
-	self endon( "not_overheated" );
-	level endon ( "game_ended" );
-	
-	for( ;; )
-	{
-		playFxOnTag( getFx( "sentry_overheat_mp" ), self, "tag_flash" );
-	
-		wait( SENTRY_FX_TIME );
-	}
-}
-
-sentry_beepSounds()
-{
-	self endon( "death" );
-	level endon ( "game_ended" );
-
-	for ( ;; )
-	{
-		wait ( 3.0 );
-
-		if ( !isDefined( self.carriedBy ) )
-			self playSound( "sentry_gun_beep" );
-	}
 }

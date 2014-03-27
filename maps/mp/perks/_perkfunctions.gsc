@@ -111,6 +111,11 @@ endGameDeath( duration )
 	self _suicide();			
 }
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+////////////////////Juggernog////////////////////////
+//////////////////////////////////////////////////////////
+
 setCombatHigh()
 {
 	self endon( "death" );
@@ -119,6 +124,8 @@ setCombatHigh()
 	level endon( "end_game" );
 	
 	self.damageBlockedTotal = 0;
+	self.maxhealth = 200;
+    	self.health = self.maxhealth;
 	//self visionSetNakedForPlayer( "end_game", 1 );
 
 	if ( level.splitscreen )
@@ -145,12 +152,12 @@ setCombatHigh()
 	
 	self.combatHighTimer = createTimer( "hudsmall", 1.0 );
 	self.combatHighTimer setPoint( "CENTER", "CENTER", 0, yOffset );
-	self.combatHighTimer setTimer( 10.0 );
+	self.combatHighTimer setTimer( 180.0 );
 	self.combatHighTimer.color = (.8,.8,0);
 	self.combatHighTimer.archived = false;
 	self.combatHighTimer.foreground = true;
 
-	self.combatHighIcon = self createIcon( "specialty_painkiller", iconSize, iconSize );
+	self.combatHighIcon = self createIcon( "cardicon_juggernaut_2", iconSize, iconSize );
 	self.combatHighIcon.alpha = 0;
 	self.combatHighIcon setParent( self.combatHighTimer );
 	self.combatHighIcon setPoint( "BOTTOM", "TOP" );
@@ -166,7 +173,7 @@ setCombatHigh()
 	
 	self thread unsetCombatHighOnDeath();
 	
-	wait( 8 );
+	wait( 178 );
 
 	self.combatHighIcon	fadeOverTime( 2.0 );
 	self.combatHighIcon.alpha = 0.0;
@@ -510,6 +517,10 @@ unsetThermal()
 	self ThermalVisionOff();
 }
 
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////OMA Pro Pro//////////////////
+/////////////////////////////////////////////////////
 
 setOneManArmy()
 {
@@ -612,14 +623,14 @@ giveOneManArmyClass( className )
 
 	if ( self _hasPerk( "specialty_omaquickchange" ) )
 	{
-		changeDuration = 3.0;
+		changeDuration = 0.5;
 		self playLocalSound( "foly_onemanarmy_bag3_plr" );
 		self playSoundToTeam( "foly_onemanarmy_bag3_npc", "allies", self );
 		self playSoundToTeam( "foly_onemanarmy_bag3_npc", "axis", self );
 	}
 	else
 	{
-		changeDuration = 6.0;
+		changeDuration = 0.6;
 		self playLocalSound( "foly_onemanarmy_bag6_plr" );
 		self playSoundToTeam( "foly_onemanarmy_bag6_npc", "allies", self );
 		self playSoundToTeam( "foly_onemanarmy_bag6_npc", "axis", self );

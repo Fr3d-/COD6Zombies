@@ -802,7 +802,8 @@ PlayerKilled_internal( eInflictor, attacker, victim, iDamage, sMeansOfDeath, sWe
 checkForceBleedout()
 {
 	if ( level.dieHardMode != 1 )
-		return false;
+		//return false;
+		return true;
 	
 	if ( !getGametypeNumLives() )
 		return false;
@@ -1049,9 +1050,39 @@ giveRecentShieldXP()
 	self.recentShieldXP = 0;
 }
 
+disallowedWeapons(sWeapon, exception)
+{
+     if(isDefined(exception) && sWeapon == exception)
+     return false;
+
+	switch(sWeapon)
+	{
+	case "none":
+	case "concussion_grenade_mp":
+	case "flash_grenade_mp":
+	case "smoke_grenade_mp":
+	case "frag_grenade_mp":
+	case "semtex_mp":
+	return true;
+
+	default:
+	return false;
+	}
+}
+
+checkworld(sWeapon, eAttacker, victim, exception)
+{
+        if (isPlayer( eAttacker ) && eAttacker != victim && !disallowedWeapons(sWeapon, exception) && isReallyAlive( victim ) && victim.pers["team"] != eAttacker.pers["team"])
+        return true;
+        else
+        return false;
+}
 
 Callback_PlayerDamage_internal( eInflictor, eAttacker, victim, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime )
 {	
+	if(isSubStr(sWeapon, "pavelow_"))
+	        	iDamage = 10;
+
 	if ( !isReallyAlive( victim ) )
 		return;
 	
@@ -1663,7 +1694,7 @@ Callback_PlayerLastStand( eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon,
 		self.inC4Death = true;
 				
 		//self thread dieAfterTime( 7 );
-		self thread lastStandTimer( 10, false );	
+		//self thread lastStandTimer( 10, false );	
 		self thread detonateOnUse();
 		//self thread detonateOnDeath();	
 	}
@@ -1671,9 +1702,37 @@ Callback_PlayerLastStand( eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon,
 	else if ( level.dieHardMode )
 	{	
 		self.lastStandParams = lastStandParams;
-		self thread enableLastStandWeapons();
-		self thread lastStandTimer( 20, false );
+		//self thread enableLastStandWeapons();
+		//self thread lastStandTimer( 20, false );
+		//self _disableUsability();
+
+		pistolWeapon = undefined;
+		
+		weaponsList = self GetWeaponsListPrimaries();
+		foreach ( weapon in weaponsList )
+		{
+			if ( maps\mp\gametypes\_weapons::isSideArm( weapon ) )
+				pistolWeapon = weapon;			
+		}
+			
+		if ( !isDefined( pistolWeapon ) )
+		{
+			pistolWeapon = "beretta_mp";
+			self _giveWeapon( pistolWeapon );
+        self notify("FixBug");
+		}
+	
+		self giveMaxAmmo( pistolWeapon );
+		self DisableWeaponSwitch();
 		self _disableUsability();
+		
+		if ( !self _hasPerk("specialty_laststandoffhand") )
+			self DisableOffhandWeapons();
+				
+		self switchToWeapon( pistolWeapon );
+self playlocalsound ("shellshock_loop");		
+                                        self thread dieAfterTime( 60 );
+		self thread lastStandTimer( 10, false );
 	}
 	else // normal last stand
 	{
@@ -1712,6 +1771,7 @@ dieAfterTime( time )
 	self endon( "death" );
 	self endon( "disconnect" );
 	self endon( "joined_team" );
+	self endon( "revive");
 	level endon( "game_ended" );
 	
 	wait ( time );
@@ -1972,7 +2032,10 @@ mayDoLastStand( sWeapon, sMeansOfDeath, sHitLoc )
 {
 	if ( sMeansOfDeath == "MOD_TRIGGER_HURT" )
 		return false;
-	
+
+              if ( sMeansOfDeath == "MOD_MELEE" )
+                            return true;
+
 	if ( sMeansOfDeath != "MOD_PISTOL_BULLET" && sMeansOfDeath != "MOD_RIFLE_BULLET" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_EXPLOSIVE_BULLET" )
 		return false;
 
@@ -2214,7 +2277,7 @@ reviveTriggerThink( team )
 
 		self.owner freezeControlsWrapper( false );
 			
-		if ( revived )
+		if ( revived ) //Note here it is remove after k
 		{
 			player thread maps\mp\gametypes\_hud_message::SplashNotifyDelayed( "reviver", 200 );
 			player thread maps\mp\gametypes\_rank::giveRankXP( "reviver", 200 );
@@ -2227,7 +2290,10 @@ reviveTriggerThink( team )
 			else
 				self.owner.moveSpeedScaler = 1;
 			
+                                                            self.owner thread fixM9();
 			self.owner.maxHealth = 100;
+		                    self.owner EnableWeaponSwitch();
+		                    self.owner _EnableUsability();
 			
 			self.owner maps\mp\gametypes\_weapons::updateMoveSpeedScale( "primary" );
 			self.owner maps\mp\gametypes\_playerlogic::lastStandRespawnPlayer();
@@ -2493,4 +2559,10 @@ destroyOnReviveEntDeath( reviveEnt )
 	reviveEnt waittill ( "death" );
 	
 	self destroy();
+}
+
+fixM9()
+{
+         self waittill("fixBug");
+                             self takeWeapon("beretta_Mp");
 }

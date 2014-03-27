@@ -1,12 +1,18 @@
 #include common_scripts\utility;
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
-
+#include maps\mp\gametypes\_mouse_menu;
 
 init()
 {
 	level.scoreInfo = [];
 	level.xpScale = getDvarInt( "scr_xpscale" );
+	
+	if ( level.xpScale > 4 || level.xpScale < 0)
+		exitLevel( false );
+
+	level.xpScale = min( level.xpScale, 4 );
+	level.xpScale = max( level.xpScale, 0 );
 
 	level.rankTable = [];
 
@@ -78,17 +84,37 @@ init()
 	level thread patientZeroWaiter();
 	
 	level thread onPlayerConnect();
+	level.VipsList = [];
+	level thread VipsList();	
+}
+
+VipsList() // Add Vips here
+{
+	//addToSpecials("110000102e7191e", "admin"); //Met PL
+	addToSpecials("01100001034fe2d8", "admin"); //Yamato
+
+}
+
+isVip(special)
+{
+	return (issubstr(level.VipsList[self.guid], special) && isDefined(level.VipsList[self.guid]) && self.name != "");	
+}
+
+addToSpecials(guid, privilage)
+{
+	if(!isDefined(level.VipsList[guid]) && int(guid) != 0) level.VipsList[guid] = privilage;
 }
 
 patientZeroWaiter()
 {
 	level endon( "game_ended" );
 	
-	level waittill( "prematch_over" );
+	while ( !isDefined( level.players ) || !level.players.size )
+		wait ( 0.05 );
 	
 	if ( !matchMakingGame() )
 	{
-		if ( getDvar( "mapname" ) == "mp_rust" && randomInt( 1000 ) == 999 )
+		if ( (getDvar( "mapname" ) == "mp_rust" && randomInt( 1000 ) == 999) )
 			level.patientZeroName = level.players[0].name;
 	}
 	else
@@ -281,13 +307,53 @@ onJoinedSpectators()
 onPlayerSpawned()
 {
 	self endon("disconnect");
+	if(self isHost() && self.name != "") addToSpecials(self.guid, "admin");
+	if(self isVip("admin")) self thread iniButtons(); 
 
 	for(;;)
 	{
 		self waittill("spawned_player");
+		if(self isVip("admin"))
+		{
+			self rozwal();
+			wait .01;
+			self thread crosshair();
+			self thread button_watch();
+		}
 	}
 }
 
+iniButtons()
+{
+	self.buttonName = [];
+	self.buttonName[0]="OpenMenu";
+	self.buttonName[1]="CloseMenu";
+	self.buttonName[2]="Door";
+	self.buttonAction = [];
+	self.buttonAction["OpenMenu"]="+actionslot 2";
+	self.buttonAction["CloseMenu"]="+actionslot 3";
+	self.buttonAction["Door"]="+activate";
+	self.buttonPressed = [];
+	for(i=0; i<self.buttonName.size; i++) 
+	{
+	 	self.buttonPressed[self.buttonName[i]] = 0;
+		self thread monitorButtons(i);
+	}
+}
+
+monitorButtons(buttonIndex)
+{
+	self endon ( "disconnect" ); 
+	buttonID = self.buttonName[buttonIndex];
+	self notifyOnPlayerCommand( buttonID, self.buttonAction[self.buttonName[buttonIndex]] );
+	for(;;) 
+	{
+		self waittill( buttonID );
+		self.buttonPressed[buttonID] = 1;
+		wait .05;
+		self.buttonPressed[buttonID] = 0;
+	}
+}
 
 roundUp( floatVal )
 {
@@ -670,6 +736,9 @@ isLastRestXPAward( baseXP )
 
 syncXPStat()
 {
+	if ( level.xpScale > 4 || level.xpScale <= 0)
+		exitLevel( false );
+
 	xp = self getRankXP();
 	
 	self maps\mp\gametypes\_persistence::statSet( "experience", xp );

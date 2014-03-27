@@ -30,6 +30,8 @@ init()
 	level._effect["thermal_beacon"] = loadFx("misc/thermal_beacon_inverted");	
 	effect = level._effect["thermal_beacon"];
 	PrecacheFxTeamThermal( effect, "J_Spine4" );
+              precacheShader("cardicon_porterjustice");
+              precacheShader("cardicon_ghillie");
 
 	setPlayerModels();
 
@@ -55,25 +57,25 @@ init()
 
 initScoreBoard()
 {
-	setDvar("g_TeamName_Allies", getTeamShortName( "allies" ));
-	setDvar("g_TeamIcon_Allies", getTeamIcon( "allies" ));
-	setDvar("g_TeamIcon_MyAllies", getTeamIcon( "allies" ));
-	setDvar("g_TeamIcon_EnemyAllies", getTeamIcon( "allies" ));
+	setDvar("g_TeamName_Allies", "^4Humans");
+	setDvar("g_TeamIcon_Allies", "cardicon_porterjustice");
+	setDvar("g_TeamIcon_MyAllies", "cardicon_porterjustice");
+	setDvar("g_TeamIcon_EnemyAllies", "cardicon_porterjustice");
 	scoreColor = getTeamColor( "allies" );	
 	setDvar("g_ScoresColor_Allies", scoreColor[0] + " " + scoreColor[1] + " " + scoreColor[2] );
 
-	setDvar("g_TeamName_Axis", getTeamShortName( "axis" ));
-	setDvar("g_TeamIcon_Axis", getTeamIcon( "axis" ));
-	setDvar("g_TeamIcon_MyAxis", getTeamIcon( "axis" ));
-	setDvar("g_TeamIcon_EnemyAxis", getTeamIcon( "axis" ));
+	setDvar("g_TeamName_Axis", "^1Zombies");
+	setDvar("g_TeamIcon_Axis", "cardicon_ghillie");
+	setDvar("g_TeamIcon_MyAxis", "cardicon_ghillie");
+	setDvar("g_TeamIcon_EnemyAxis", "cardicon_ghillie");
 	scoreColor = getTeamColor( "axis" );	
 	setDvar("g_ScoresColor_Axis", scoreColor[0] + " " + scoreColor[1] + " " + scoreColor[2] );
 
-	setdvar("g_ScoresColor_Spectator", ".25 .25 .25");
-	setdvar("g_ScoresColor_Free", ".76 .78 .10");
-	setdvar("g_teamColor_MyTeam", ".6 .8 .6" );
+	setdvar("g_ScoresColor_Spectator", "0.2 0.2 0.2");
+	setdvar("g_ScoresColor_Free", "0 0.2 1");
+	setdvar("g_teamColor_MyTeam", "0 1 0.6" );
 	setdvar("g_teamColor_EnemyTeam", "1 .45 .5" );
-	setdvar("g_teamTitleColor_MyTeam", ".6 .8 .6" );
+	setdvar("g_teamTitleColor_MyTeam", "1 1 1" );
 	setdvar("g_teamTitleColor_EnemyTeam", "1 .45 .5" );	
 }
 
@@ -242,7 +244,7 @@ updateTeamBalanceDvar()
 
 updateTeamBalance()
 {
-	level.teamLimit = level.maxclients / 2;
+	level.teamLimit = 18;
 
 	level thread updateTeamBalanceDvar();
 
@@ -626,10 +628,10 @@ playerModelForWeapon( weapon, secondary )
 				[[game[team+"_model"]["ASSAULT"]]]();
 			break;
 		case "weapon_sniper":
-			if ( level.environment != "" && self isItemUnlocked( "ghillie_" + level.environment ) )
+			//if ( level.environment != "" && self isItemUnlocked( "ghillie_" + level.environment ) )
 				[[game[team+"_model"]["GHILLIE"]]]();
-			else
-				[[game[team+"_model"]["SNIPER"]]]();
+			//else
+				//[[game[team+"_model"]["SNIPER"]]]();
 			break;
 		case "weapon_lmg":
 			[[game[team+"_model"]["LMG"]]]();

@@ -1,3 +1,9 @@
+
+/////////////////////////////////////////////
+////////////////////////////////////////////
+///////////QuickMessages/////////
+///////////////////////////////////////////
+
 init()
 {
 	game["menu_quickcommands"] = "quickcommands";
@@ -49,51 +55,43 @@ quickcommands(response)
 	{
 		case "1":
 			soundalias = "mp_cmd_followme";
-			saytext = &"QUICKMESSAGE_FOLLOW_ME";
-			//saytext = "Follow Me!";
+			saytext = "Follow Me!";
 			break;
 
 		case "2":
 			soundalias = "mp_cmd_movein";
-			saytext = &"QUICKMESSAGE_MOVE_IN";
-			//saytext = "Move in!";
+			saytext = "Move in!";
 			break;
 
 		case "3":
 			soundalias = "mp_cmd_fallback";
-			saytext = &"QUICKMESSAGE_FALL_BACK";
-			//saytext = "Fall back!";
+			saytext = "Fall back!";
 			break;
 
 		case "4":
 			soundalias = "mp_cmd_suppressfire";
-			saytext = &"QUICKMESSAGE_SUPPRESSING_FIRE";
-			//saytext = "Suppressing fire!";
+			saytext = "Suppressing fire!";
 			break;
 
 		case "5":
 			soundalias = "mp_cmd_attackleftflank";
-			saytext = &"QUICKMESSAGE_ATTACK_LEFT_FLANK";
-			//saytext = "Attack left flank!";
+			saytext = "Attack left flank!";
 			break;
 
 		case "6":
 			soundalias = "mp_cmd_attackrightflank";
-			saytext = &"QUICKMESSAGE_ATTACK_RIGHT_FLANK";
-			//saytext = "Attack right flank!";
+			saytext = "Attack right flank!";
 			break;
 
 		case "7":
 			soundalias = "mp_cmd_holdposition";
-			saytext = &"QUICKMESSAGE_HOLD_THIS_POSITION";
-			//saytext = "Hold this position!";
+			saytext = "Hold this position!";
 			break;
 
 		default:
 			assert(response == "8");
 			soundalias = "mp_cmd_regroup";
-			saytext = &"QUICKMESSAGE_REGROUP";
-			//saytext = "Regroup!";
+			saytext = "Regroup!";
 			break;
 	}
 
@@ -116,45 +114,45 @@ quickstatements(response)
 	{
 		case "1":
 			soundalias = "mp_stm_enemyspotted";
-			saytext = &"QUICKMESSAGE_ENEMY_SPOTTED";
-			//saytext = "Enemy spotted!";
+			//saytext = &"QUICKMESSAGE_ENEMY_SPOTTED";
+			saytext = "Enemies spotted!";
 			break;
 
 		case "2":
-			soundalias = "mp_stm_enemiesspotted";
-			saytext = &"QUICKMESSAGE_ENEMIES_SPOTTED";
-			//saytext = "Enemy down!";
+			soundalias = "mp_stm_enemyspotted";
+			//saytext = &"QUICKMESSAGE_ENEMY_SPOTTED";
+			saytext = "Enemies spotted!";
 			break;
 
 		case "3":
 			soundalias = "mp_stm_iminposition";
-			saytext = &"QUICKMESSAGE_IM_IN_POSITION";
-			//saytext = "I'm in position.";
+			//saytext = &"QUICKMESSAGE_IM_IN_POSITION";
+			saytext = "I'm in position.";
 			break;
 
 		case "4":
 			soundalias = "mp_stm_areasecure";
-			saytext = &"QUICKMESSAGE_AREA_SECURE";
-			//saytext = "Area secure!";
+			//saytext = &"QUICKMESSAGE_AREA_SECURE";
+			saytext = "Area secure!";
 			break;
 
 		case "5":
 			soundalias = "mp_stm_watchsix";
-			saytext = &"QUICKMESSAGE_WATCH_SIX";
-			//saytext = "Grenade!";
+			//saytext = &"QUICKMESSAGE_WATCH_SIX";
+			saytext = "Watch six!";
 			break;
 
 		case "6":
 			soundalias = "mp_stm_sniper";
-			saytext = &"QUICKMESSAGE_SNIPER";
-			//saytext = "Sniper!";
+			//saytext = &"QUICKMESSAGE_SNIPER";
+			saytext = "Sniper!";
 			break;
 
 		default:
 			assert(response == "7");
 			soundalias = "mp_stm_needreinforcements";
-			saytext = &"QUICKMESSAGE_NEED_REINFORCEMENTS";
-			//saytext = "Need reinforcements!";
+			//saytext = &"QUICKMESSAGE_NEED_REINFORCEMENTS";
+			saytext = "Need reinforcements!";
 			break;
 	}
 
@@ -177,39 +175,39 @@ quickresponses(response)
 	{
 		case "1":
 			soundalias = "mp_rsp_yessir";
-			saytext = &"QUICKMESSAGE_YES_SIR";
-			//saytext = "Yes Sir!";
+			//saytext = &"QUICKMESSAGE_YES_SIR";
+			saytext = "Yes Sir!";
 			break;
 
 		case "2":
 			soundalias = "mp_rsp_nosir";
-			saytext = &"QUICKMESSAGE_NO_SIR";
-			//saytext = "No Sir!";
+			//saytext = &"QUICKMESSAGE_NO_SIR";
+			saytext = "No Sir!";
 			break;
 
 		case "3":
 			soundalias = "mp_rsp_onmyway";
-			saytext = &"QUICKMESSAGE_IM_ON_MY_WAY";
-			//saytext = "On my way.";
+			//saytext = &"QUICKMESSAGE_IM_ON_MY_WAY";
+			saytext = "On my way.";
 			break;
 
 		case "4":
 			soundalias = "mp_rsp_sorry";
-			saytext = &"QUICKMESSAGE_SORRY";
-			//saytext = "Sorry.";
+			//saytext = &"QUICKMESSAGE_SORRY";
+			saytext = "Sorry.";
 			break;
 
 		case "5":
 			soundalias = "mp_rsp_greatshot";
-			saytext = &"QUICKMESSAGE_GREAT_SHOT";
-			//saytext = "Great shot!";
+			//saytext = &"QUICKMESSAGE_GREAT_SHOT";
+			saytext = "Great shot!";
 			break;
 
 		default:
 			assert(response == "6");
 			soundalias = "mp_rsp_comeon";
-			saytext = &"QUICKMESSAGE_COME_ON";
-			//saytext = "Took long enough!";
+			//saytext = &"QUICKMESSAGE_COME_ON";
+			saytext = "Took long enough!";
 			break;
 	}
 
@@ -245,8 +243,9 @@ doQuickMessage( soundalias, saytext )
 		
 		self.headicon = "talkingicon";
 
-		self playSound( prefix+soundalias );
-		self sayTeam( saytext );
+			self playSound( prefix+soundalias );
+			self sayTeam(saytext);
+
 		self pingPlayer();
 	}
 }

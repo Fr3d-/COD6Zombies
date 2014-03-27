@@ -1,6 +1,11 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+//////////////////No Radiation////////////////
+/////////////////////////////////////////////////////
+
 radiation()
 {
 	precacheString( &"SCRIPT_RADIATION_DEATH" );
@@ -8,11 +13,6 @@ radiation()
 	
 	if (radiationFields.size > 0)
 	{
-		
-		precacheshellshock( "mp_radiation_low" );
-		precacheshellshock( "mp_radiation_med" );
-		precacheshellshock( "mp_radiation_high" );
-		
 		foreach ( trigger in radiationFields )
 			trigger thread common_scripts\_dynamic_world::triggerTouchThink( ::playerEnterArea, ::playerLeaveArea );
 		
@@ -63,63 +63,8 @@ soundWatcher( soundOrg )
 
 radiationEffect()
 {
-	self endon( "disconnect" );
-	self endon( "game_ended" );
-	self endon( "death" );
-	self endon( "leftTrigger" );
-	
 	self.poison = 0;
-	self thread soundWatcher( self );
-	
-	while (1)
-	{
-		self.poison ++;
-		
-		switch( self.poison )
-		{
-			case 1:				  
-				self.radiationSound = "item_geigercouner_level2";
-				self playLoopSound( self.radiationSound );
-				self ViewKick( 1, self.origin );
-				break;
-			case 3:				  
-				self shellshock( "mp_radiation_low", 4);
-				self.radiationSound = "item_geigercouner_level3";
-				self stopLoopSound();
-				self playLoopSound( self.radiationSound );
-				self ViewKick( 3, self.origin );
-				self doRadiationDamage(15);
-				break;
-			case 4:
-				self shellshock( "mp_radiation_med", 5);
-				self.radiationSound = "item_geigercouner_level3";
-				self stopLoopSound();
-				self playLoopSound( self.radiationSound );
-				self ViewKick( 15, self.origin );
-				self thread blackout();
-				self doRadiationDamage(25);
-				break;
-			case 6:
-				self shellshock( "mp_radiation_high", 5);
-				self.radiationSound = "item_geigercouner_level4";
-				self stopLoopSound();
-				self playLoopSound( self.radiationSound );
-				self ViewKick( 75, self.origin );
-				self doRadiationDamage(45);
-				break;
-			case 8:
-				self shellshock( "mp_radiation_high", 5);
-				self.radiationSound = "item_geigercouner_level4";
-				self stopLoopSound();
-				self playLoopSound( self.radiationSound );
-				self ViewKick( 127, self.origin );
-				self doRadiationDamage(175);
-
-				break;
-		}
-		wait(1);
-	}
-	wait(5);
+	wait(55);
 }
 blackout( )
 {

@@ -3,6 +3,8 @@
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
 
+////////Some changed utilities//////////
+
 init()
 {
 	level.classMap["class0"] = 0;
@@ -399,8 +401,8 @@ giveLoadout( team, class, allowCopycat )
 	// Action Slots
 	self _SetActionSlot( 1, "" );
 	//self _SetActionSlot( 1, "nightvision" );
-	self _SetActionSlot( 3, "altMode" );
-	self _SetActionSlot( 4, "" );
+	self _SetActionSlot( 3, "nightvision" );
+	self _SetActionSlot( 4, "AltMode" );
 
 	// Perks
 	self _clearPerks();

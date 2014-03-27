@@ -1,3 +1,9 @@
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+///////////Red Damagefeedback///////////
+/////////////////////////////////////////////////////
+
 init()
 {
 	precacheShader("damage_feedback");
@@ -21,6 +27,7 @@ onPlayerConnect()
 		player.hud_damagefeedback.y = -12;
 		player.hud_damagefeedback.alpha = 0;
 		player.hud_damagefeedback.archived = true;
+		player.hud_damagefeedback.color = (1,0,0);
 		player.hud_damagefeedback setShader("damage_feedback", 24, 48);
 	}
 }
