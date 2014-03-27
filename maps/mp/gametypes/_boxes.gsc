@@ -13,6 +13,8 @@ CONST_AMMO_ICON		= "waypoint_ammo_friendly";
 CONST_RAND_NAME		= "    ?    ";
 CONST_RAND_PRICE	= 1000;
 CONST_RAND_ICON		= "hudicon_neutral";
+CONST_RAND_WAITTIME	= 12;
+CONST_RAND_RMVTIME	= 5;
 
 
 init(){
@@ -137,17 +139,38 @@ ammoThink(pos)
 	}
 }
 
+randomCrateAllowCrateUsage(){
+	wait CONST_CRATE_COOLDOWN_TIME;
+	level.randomCrateInUse = false;
+}
+
+randomCrateAutoRemove(){
+	level endon("boxend");
+
+	wait CONST_RAND_RMVTIME;
+
+	level.wep delete();
+
+	self ClearLowerMessage("trade", 1);
+	
+	self thread randomCrateAllowCrateUsage();
+
+	level notify("boxend");
+}
+
 randomCrateGiveWeapon(pos)
 {
 	level endon("boxend");
 
-	wait 8;
+	wait CONST_RAND_WAITTIME;
 
 	level notify("endrandom");
 
 	boxWeapon = level.weapons[RandomInt( level.weapons.size )];
 	level.wep setModel(GetWeaponModel(boxWeapon));
 	wait 0.1;
+
+	self thread randomCrateAutoRemove();
 
 	while(1) 
 	{
@@ -166,13 +189,9 @@ randomCrateGiveWeapon(pos)
 				self switchToWeapon(boxWeapon);
 				self giveMaxAmmo(boxWeapon);
 
-				//self thread GunSpecials(); -- add later
-
-				wait 0.01;
-
 				level.wep delete();
 
-				level.randomCrateInUse = false;
+				self thread randomCrateAllowCrateUsage();
 
 				level notify("boxend");
 	  		}
@@ -247,7 +266,7 @@ randomCrateThink(pos, angle)
 
 					level.wep = spawn("script_model", pos + (0, 5, 0) );
 					level.wep.angles = angle;
-					level.wep MoveTo(level.wep.origin + (0, 0, 50), 3);
+					level.wep MoveTo(level.wep.origin + (0, 0, 50), CONST_RAND_WAITTIME / 2);
 
 					self thread randomCrateGunEffect();
 				} else {
