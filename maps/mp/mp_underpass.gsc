@@ -10,8 +10,10 @@ main(){
 	level.pared = 1;
 	level thread Relampagos();
 	level.reaparicion = (-3158,547,389);
-	level.lugares = []; 
-	level.lugares[0] = (-1472,812,416); 
-	level.lugares[1] = (-1533,517,416); 
+	level.lugares = [];
+	level.lugares[0] = (-1472,812,416);
+	level.lugares[1] = (-1533,517,416);
+
 	maps\mp\gametypes\_boxes::AmmoMatic((-2396,505,384),(0,90,0));
+	maps\mp\gametypes\_boxes::randomCrate((-2539,498,384),(0,90,0));
 }

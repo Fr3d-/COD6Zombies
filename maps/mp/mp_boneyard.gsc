@@ -13,6 +13,8 @@ main(){
 	level.lugares = []; 
 	level.lugares[0] = (1184,-1984,-67); 
 	level.lugares[1] = (1127,-3728,-100); 
-	level.lugares[2] = (-899,-2820,-21); 
+	level.lugares[2] = (-899,-2820,-21);
+	
 	maps\mp\gametypes\_boxes::AmmoMatic((-161,-1710,-130),(0,90,0));
+	maps\mp\gametypes\_boxes::randomCrate((571,-2561,-131),(0,0,0));
 }

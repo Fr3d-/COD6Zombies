@@ -7,4 +7,6 @@ main(){
 	level waittill("createMap");
 	
 	level.vision = "cobra_sunset";
+
+	maps\mp\gametypes\_boxes::randomCrate((9881,18431,13635), (0, 90, 0));
 }

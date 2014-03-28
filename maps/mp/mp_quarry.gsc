@@ -6,5 +6,5 @@
 main(){
 	level waittill("createMap");
 
-	maps\mp\gametypes\_boxes::randomCrate((-2669,-283,12),(0,0,0));
+	maps\mp\gametypes\_boxes::randomCrate((-3503,63,92), (0, 0, 0));
 }

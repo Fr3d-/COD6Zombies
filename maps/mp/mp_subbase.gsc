@@ -12,6 +12,8 @@ main(){
 	level.cuerpo = "mp_body_opforce_arctic_shotgun_c";	
 	level.lugares = []; 
 	level.lugares[0] = (-265,-3920,0); 
-	level.lugares[1] = (-402,-3978,0); 
+	level.lugares[1] = (-402,-3978,0);
+
 	maps\mp\gametypes\_boxes::AmmoMatic((-305,-6440,0),(0,0,0));
+	maps\mp\gametypes\_boxes::randomCrate((-412,-6440,0),(0,0,0));
 }

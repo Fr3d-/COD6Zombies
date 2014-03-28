@@ -16,5 +16,7 @@ main(){
 	level.lugares[2] = (-3758,-10999,3200); 
 	level.lugares[3] = (-5861,-12190,3200); 
 	level.lugares[4] = (-4033,-10430,3200); 
+	
 	maps\mp\gametypes\_boxes::AmmoMatic((-7492,-10755,3200),(0,225,0));
+	maps\mp\gametypes\_boxes::randomCrate((-5529,-8791,3200), (0, 225, 0));
 }
