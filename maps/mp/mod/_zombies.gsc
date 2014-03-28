@@ -503,17 +503,7 @@ onPlayerSpawned()
 		self setOrigin(level.reaparicion+(randomInt(50),randomInt(50),0));
 		self.health = 100;
 		self.maxhealth = 100;
-		self thread Vision();
 		//self thread Coordinates();
-	}
-}
-
-Vision()
-{
-	while(1)
-	{
-		self VisionSetNakedForPlayer(level.vision, 0);
-		wait 0.05;
 	}
 }
 

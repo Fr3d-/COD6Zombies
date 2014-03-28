@@ -269,7 +269,7 @@ Superviviente()
 	self switchToWeapon("beretta_mp",0,false);
 	self giveMaxAmmo("beretta_mp",0,false);
 	SetPlayerIgnoreRadiusDamage( true );
-	self thread VisionNocturna();
+	self thread nightvision();
 }
 
 Caer(force,height,slide)
@@ -327,20 +327,23 @@ FuegoR()
 	}
 }
 
-VisionNocturna() 
+nightvision() 
 {
-        self notifyOnPlayerCommand("night", "+actionslot 3");
-        for(;;)
-        {
-              self waittill("night");
-	self VisionSetNakedForPlayer( "black_bw", 0.2 );
-              wait 0.2;
-              self playSoundToPlayer( "item_nightvision_on", self );
-	self VisionSetNakedForPlayer( "default_night_mp", 0 );
-              self waittill("night");
-	self VisionSetNakedForPlayer( "black_bw", 0.2 );
-              wait 0.2;
-	self playSoundToPlayer( "item_nightvision_off", self );
-              self VisionSetNakedForPlayer( getDvar( "mapname" ), 0 );
-         }
+	self endon("disconnect");
+	self endon("death");
+    self notifyOnPlayerCommand("nightvision", "+actionslot 1");
+
+    for(;;)
+    {
+		self waittill("nightvision");
+		self playSoundToPlayer( "item_nightvision_on", self );
+		self VisionSetNakedForPlayer( "default_night_mp", 0.5 );
+
+		self waittill("nightvision");
+		self playSoundToPlayer( "item_nightvision_off", self );
+		if( isDefined(level.vision) )
+      		self VisionSetNakedForPlayer( level.vision, 0.5 );
+      	else
+      		self VisionSetNakedForPlayer( getDvar( "mapname" ), 0.5 );
+     }
 }
