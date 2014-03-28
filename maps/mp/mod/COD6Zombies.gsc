@@ -1,10 +1,9 @@
 main(){
-	maps\mp\mod\_preload::load();
-	maps\mp\mod\config::load();
+	maps\mp\mod\_preload::main();
+	maps\mp\mod\config::main();
 	
-	thread maps\mp\mod\_bot::init();
-	thread maps\mp\mod\_survivors::Inicio();
-	thread maps\mp\mod\_crates::init();
+	thread maps\mp\mod\_bot::main();
+	thread maps\mp\mod\_survivors::main();
 
 	level notify("createMap");
 }

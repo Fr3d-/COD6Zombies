@@ -10,13 +10,13 @@
 ////////////////////Bot AI////////////////////////
 /////////////////////////////////////////////////////
 
-init()
+main()
 {
-	level thread Empezar();
+	level thread init();
 	level thread onPlayerConnect();
 }
 
-Empezar()
+init()
 {
 	level.contador = createServerFontString( "objective", 1.7, "allies" );
 	level.contador setPoint("","",0,-190);

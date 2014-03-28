@@ -1,4 +1,4 @@
-load(){
+main(){
 	level.config["CONST_CRATE_DISTANCE"] = 100;
 	level.config["CONST_CRATE_COOLDOWN_TIME"] = 1;
 
