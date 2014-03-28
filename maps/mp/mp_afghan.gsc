@@ -1,7 +1,7 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
-#include maps\mp\_functions;
-#include maps\mp\_mapeffects;
+#include maps\mp\mod\_functions;
+#include maps\mp\mod\_maptools;
 
 main(){
 	level waittill("createMap");
@@ -29,10 +29,10 @@ main(){
 			CreateBlock((-1165,11408,-1900),(0,102,0));
 			//CreateMinigun((-2617,10639,-1682),"pavelow_minigun_mp",(0,-151,0)); 
 			CreateBlock((-2617,10639,-1720),(0,-241,0));
-			maps\mp\gametypes\_boxes::AmmoMatic((-1882,10951,-1799),(5,30,0));
+			maps\mp\mod\_crates::AmmoMatic((-1882,10951,-1799),(5,30,0));
 			//SpeedCola((-1658,11052,-1826),(2,30,0));
 
-			maps\mp\gametypes\_boxes::randomCrate((-1224,11249,-1888),(10,20,0));
+			maps\mp\mod\_crates::randomCrate((-1224,11249,-1888),(10,20,0));
 		break;
 
 		case 1:
@@ -51,8 +51,8 @@ main(){
 			level.lugares[0] = (4443,9310,-2135); 
 			level.lugares[1] = (5116,9553,-1928); 
 			level.lugares[2] = (5918,9997,-2039); 
-			maps\mp\gametypes\_boxes::AmmoMatic((3921,8543,-2265),(0,0,0));
-			maps\mp\gametypes\_boxes::randomCrate((6581,10005,-1841),(0,0,0));
+			maps\mp\mod\_crates::AmmoMatic((3921,8543,-2265),(0,0,0));
+			maps\mp\mod\_crates::randomCrate((6581,10005,-1841),(0,0,0));
 		break;
 	}
 }

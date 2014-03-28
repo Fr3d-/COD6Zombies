@@ -7,6 +7,7 @@ load(){
 	precacheMpAnim("pb_sprint_pistol");
 	precacheMpAnim("pb_sprint_akimbo");
 	precacheMpAnim("pb_walk_forward_akimbo");
+	precacheMpAnim("pt_stand_pullout_shield");
 
 	precacheShader("specialty_fastreload_upgrade");
 	precacheShader("cardicon_juggernaut_2");

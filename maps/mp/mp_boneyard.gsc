@@ -1,7 +1,7 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
-#include maps\mp\_functions;
-#include maps\mp\_mapeffects;
+#include maps\mp\mod\_functions;
+#include maps\mp\mod\_maptools;
 
 main(){
 	level waittill("createMap");
@@ -15,6 +15,6 @@ main(){
 	level.lugares[1] = (1127,-3728,-100); 
 	level.lugares[2] = (-899,-2820,-21);
 	
-	maps\mp\gametypes\_boxes::AmmoMatic((-161,-1710,-130),(0,90,0));
-	maps\mp\gametypes\_boxes::randomCrate((571,-2561,-131),(0,0,0));
+	maps\mp\mod\_crates::AmmoMatic((-161,-1710,-130),(0,90,0));
+	maps\mp\mod\_crates::randomCrate((571,-2561,-131),(0,0,0));
 }

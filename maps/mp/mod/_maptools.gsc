@@ -1,6 +1,6 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
-#include maps\mp\_functions;
+#include maps\mp\mod\_functions;
 #include common_scripts\utility;
 
 

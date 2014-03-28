@@ -241,27 +241,6 @@ DesegundosaTiempo(sec)
         	return hours + ":" + minutes + ":" + seconds;
 }
 
-SuperRandomInt(numero)
-{
-	onum = numero * 0.0625;
-	
-	final = 0;
-	rand = [];
-
-	for(i = 0; i < 16; i++)
-	{
-		rand[i] = randomfloat(onum);
-		final += rand[i];
-	}
-
-	return int(final);
-}
-
-WaitMinutes(minutos)
-{
-	wait(minutos * 60);
-}
-
 EscalerasNo()
 {
 	while(1)

@@ -160,7 +160,7 @@ main()
 	setDvar( "r_lightGridContrast", 0 );
 
 	// Launch the mod
-	maps\mp\COD6Zombies::load();
+	maps\mp\mod\COD6Zombies::main();
 }
 
 exploder_load( trigger )

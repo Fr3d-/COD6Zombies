@@ -1,7 +1,7 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
-#include maps\mp\_functions;
-#include maps\mp\_mapeffects;
+#include maps\mp\mod\_functions;
+#include maps\mp\mod\_maptools;
 
 main(){
 	level waittill("createMap");
@@ -17,6 +17,6 @@ main(){
 	CreateMinigun((1907,3878,73),"pavelow_minigun_mp",(0,71,0));
 	CreateMinigun((937,4208,146),"pavelow_minigun_mp",(0,49,0));
 
-	maps\mp\gametypes\_boxes::AmmoMatic((1161,3844,86),(0,0,0));
-	maps\mp\gametypes\_boxes::randomCrate((1362,3719,65),(0,0,0));
+	maps\mp\mod\_crates::AmmoMatic((1161,3844,86),(0,0,0));
+	maps\mp\mod\_crates::randomCrate((1362,3719,65),(0,0,0));
 }

@@ -1,7 +1,7 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
-#include maps\mp\_functions;
-#include maps\mp\_mapeffects;
+#include maps\mp\mod\_functions;
+#include maps\mp\mod\_maptools;
 #include common_scripts\utility;
 #using_animtree( "multiplayer" );
 
@@ -171,7 +171,7 @@ AtacarJugador(i)
 		}
 		Angulos = VectorToAngles( objetivo getEye() - self getTagOrigin( "j_head" ) );
 		self.angles = (0, Angulos[1], 0);
-		delante = self.origin + (0, 0, 25) + maps\mp\_functions::vector_scal(anglestoforward(angulos), 25);
+		delante = self.origin + (0, 0, 25) + maps\mp\mod\_functions::vector_scal(anglestoforward(angulos), 25);
 		final = bullettrace(delante, delante + (0, 0, -200), false, self);
 		self moveto(final["position"],self.velocidad);
 	wait 0.08;
@@ -201,7 +201,7 @@ AtacarJugadorParedes(i) //Thanks to Nukem
 			}
 			movetoLoc = VectorToAngles( pTarget getTagOrigin("j_head") - self getTagOrigin( "j_head" ) );
 			self.angles = (0, movetoLoc[1], 0);
-			delante = self.origin + (0, 0, 25) + maps\mp\_functions::vector_scal(anglestoforward(self.angles), 25);
+			delante = self.origin + (0, 0, 25) + maps\mp\mod\_functions::vector_scal(anglestoforward(self.angles), 25);
 			final = bullettrace(delante, delante + (0, 0, -200), false, self);
 			self moveto(final["position"],self.velocidad);
 		}
@@ -212,7 +212,7 @@ AtacarJugadorParedes(i) //Thanks to Nukem
 
 Velocidades(i)
 {
-	switch( 1)
+	switch( randomInt(9) )
 	{
 		case 0:
 		self.velocidad = 0.5;
@@ -302,9 +302,15 @@ Matar(i)
 	{
 		foreach( jugador in level.players )
 		{
-			if(distancesquared(jugador.origin, self.origin) <= 860)
+			if(distancesquared(jugador.origin, self.origin) <= 1500)
 			{
-				self ScriptModelPlayAnim("pt_melee_right2right_1");
+				switch( randomInt(2) ){
+					case 0:
+						self ScriptModelPlayAnim("pt_melee_right2right_1");
+					case 1:
+						self ScriptModelPlayAnim("pt_stand_pullout_shield");
+				}
+
 				earthquake(0.7,1, self.origin + (0,0,40), 60);
 				jugador.health--;
 				if(jugador.health <= 0)
@@ -427,7 +433,7 @@ PrepararNuevaOleada()
 {
 	while(1)
 	{
-		if(maps\mp\_functions::Zombiesconvida() <= 0)
+		if(maps\mp\mod\_functions::Zombiesconvida() <= 0)
 		{
 			iprintlnbold("^1Humans Have survived the Wave");
 			foreach(jugador in level.players)
@@ -608,7 +614,7 @@ Marcadores(player)
 	for(;;)
 	{
 		player waittill("showHost");
-		player thread maps\mp\_survivors::DestruirTodoelHUD();
+		player thread maps\mp\mod\_survivors::DestruirTodoelHUD();
 	        	player.scorebartop = self createRectangle("", "", 0, -190, 800, 22, "minimap_scanlines", (0,1,0.6), 1, 1);
 		player.hostname = player createFontString("hudmedium", 1.4);
 		player.hostname setPoint("BOTTOMLEFT", "BOTTOMLEFT", 85, -25);
@@ -616,6 +622,6 @@ Marcadores(player)
 		player waittill("hideHost");
 		player.hostname destroy();
 		player.scorebartop destroy();
-		player thread maps\mp\_survivors::Pantalla();
+		player thread maps\mp\mod\_survivors::Pantalla();
 	}
 }

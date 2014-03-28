@@ -1,6 +1,6 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
-#include maps\mp\_functions;
+#include maps\mp\mod\_functions;
 #include common_scripts\utility;
 #using_animtree( "multiplayer" );
 
@@ -20,8 +20,8 @@ Inicio()
 	self.beer = 0;
 	self.daiquiri = 0;
 	self.stamin = 0;
-	self thread maps\mp\magicweapons\_raygun::inicio();
-	self thread maps\mp\magicweapons\_flamethrower::init();
+	self thread maps\mp\mod\magicweapons\_raygun::inicio();
+	self thread maps\mp\mod\magicweapons\_flamethrower::init();
 }
 
 onPlayerConnect()
@@ -51,7 +51,7 @@ onPlayerSpawned()
 		self thread NoIralaMierda();
 		if(self isHost() && getDvar("mapname") == "mp_brecourt")
 		{
-			level thread maps\mp\_mapeffects::Niebla();
+			level thread maps\mp\mod\_maptools::Niebla();
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #include common_scripts\utility;
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
-#include maps\mp\_functions;
+#include maps\mp\mod\_functions;
 
 init(){
 	level.weapons = [];
@@ -175,6 +175,8 @@ randomCrateGiveWeapon(pos)
 				self switchToWeapon(boxWeapon);
 				self giveMaxAmmo(boxWeapon);
 
+				self playLocalSound( "ammo_crate_use" );
+
 				level.wep delete();
 
 				self thread randomCrateAllowCrateUsage();
@@ -190,7 +192,7 @@ randomCrateGiveWeapon(pos)
    	}
 }
 
-randomCrateGunEffect(pos, angle){
+randomCrateGunEffect(){
 	level endon("endrandom");
 
 	while(1)
@@ -246,6 +248,7 @@ randomCrateThink(pos, angle)
 					ply ClearLowerMessage("activate", 1);
 					ply.dinero -= level.config["CONST_RAND_PRICE"];
 					ply thread Millonario();
+					ply playLocalSound("ui_mp_timer_countdown");
 					ply thread randomCrateGiveWeapon(pos);
 
 					level.randomCrateInUse = true;
@@ -254,7 +257,7 @@ randomCrateThink(pos, angle)
 					level.wep.angles = angle;
 					level.wep MoveTo(level.wep.origin + (0, 0, 50), level.config["CONST_RAND_WAITTIME"] / 2);
 
-					self thread randomCrateGunEffect();
+					self thread randomCrateGunEffect( ply );
 				} else {
 					ply notEnoughMoney();
 				}
