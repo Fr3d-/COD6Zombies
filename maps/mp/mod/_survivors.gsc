@@ -270,6 +270,7 @@ Superviviente()
 	self giveMaxAmmo("beretta_mp",0,false);
 	SetPlayerIgnoreRadiusDamage( true );
 	self thread nightvision();
+	self VisionSetNakedForPlayer( level.vision, 0 );
 }
 
 Caer(force,height,slide)
