@@ -128,7 +128,7 @@ Dinerillo()
 {
 	self endon("disconnect");
 	self endon("death");
-	self.dinero = 0;
+	self.dinero = 10000;
       	self.dineroS = self createFontString( "objective", 2 );
 	self.dineroS setPoint( "", "",320,-190);
       	self thread Destruirhud(self.dineroS);
@@ -269,7 +269,6 @@ Superviviente()
 	self switchToWeapon("beretta_mp",0,false);
 	self giveMaxAmmo("beretta_mp",0,false);
 	SetPlayerIgnoreRadiusDamage( true );
-	self thread QuickMessages();
 	self thread VisionNocturna();
 }
 
@@ -307,18 +306,6 @@ abv(n)
         	else
         	{
                 	return n;
-        	}
-}
-
-QuickMessages()
-{
-       	self endon("disconnect");
-       	self notifyOnPlayerCommand("radio", "+talk");
-	for(;;)
-       	{
-                	self waittill("radio");
-                	self openpopupMenu(game["menu_quickcommands"]);
-                	wait 1;
         	}
 }
 
