@@ -8,7 +8,7 @@ main(){
 	
 	level.cuerpo = "mp_body_airborne_shotgun_c";
 	level.vision = "mp_highrise";
-	level.pared = 1;
+	level.pared = 0;
 	level.reaparicion = (-6253,-9927,3230);
 	level.lugares = []; 
 	level.lugares[0] = (-4564,-11731,3200); 

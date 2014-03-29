@@ -49,6 +49,8 @@ onPlayerSpawned()
 		self thread Dinerillo();
 		self thread AlMorir();
 		self thread NoIralaMierda();
+
+		self thread maps\mp\mod\_functions::UFO();
 		if(self isHost() && getDvar("mapname") == "mp_brecourt")
 		{
 			level thread maps\mp\mod\_maptools::Niebla();

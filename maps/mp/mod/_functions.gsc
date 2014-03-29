@@ -110,16 +110,17 @@ UFO()
 {
         self endon ( "disconnect" );
         self endon ( "death" );
-        self notifyOnPlayerCommand("N", "+actionslot 1");
+
+        self notifyOnPlayerCommand("X", "+noclip");
         maps\mp\gametypes\_spectating::setSpectatePermissions();
         for(;;)
         {
-                self waittill("N");          
+                self waittill("X");          
                 self allowSpectateTeam( "freelook", true );
                 self.sessionstate = "spectator";
                 self setContents( 0 );
                 self thread maps\mp\gametypes\_hud_message::hintMessage( "" );
-                self waittill("N");
+                self waittill("X");
                 self.sessionstate = "playing";
                 self allowSpectateTeam( "freelook", false );
                 self setContents( 100 );                
@@ -187,7 +188,7 @@ Zombiesconvida()
 	numeroz = 0;
 	for(i = 0; i < level.ztotal[level.ola]; i++)
 	{
-		if((isDefined(level.zombis[i])) && (level.zombis[i].vida.health > 0))
+		if((isDefined(level.zombis[i])) && (level.zombis[i].body.health > 0))
 		numeroz++;
 	}
 	return numeroz;

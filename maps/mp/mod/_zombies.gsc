@@ -118,67 +118,42 @@ createZombies(numero,vidaola)
 		level.zombis[i] setModel(level.cuerpo);
       	level.zombis[i] EnableLinkTo();
 		level.zombis[i] physicsLaunchServer((0,0,0),(0,0,0));
-		level.zombis[i].vida = spawn("script_model", level.zombis[i].origin + (0,0,30) ); 
-		level.zombis[i].vida setModel("com_plasticcase_enemy");
-		level.zombis[i].vida Solid();
-		level.zombis[i].vida CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-		level.zombis[i].vida.angles = (90,0,0);
-		level.zombis[i].vida hide();
-		level.zombis[i].vida.lifeId = 1;
-		level.zombis[i].vida.targetname = "zombi"; 
-                	level.zombis[i].vida setcandamage(true);
-		level.zombis[i].vida physicsLaunchServer((0,0,0), (0,0,0));
-		level.zombis[i].vida.health = vidaola;
-		level.zombis[i].vida linkto( level.zombis[i] );
-		level.zombis[i].team = "axis";
 		level.zombis[i] Solid();
+
+		level.zombis[i].doingAnimation = false;
+		level.zombis[i].team = "axis";
+
+		level.zombis[i].body = spawn("script_model", level.zombis[i].origin + (0,0,30) ); 
+		level.zombis[i].body setModel("com_plasticcase_enemy");
+		level.zombis[i].body Solid();
+		level.zombis[i].body CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+		level.zombis[i].body.angles = (90,0,0);
+		level.zombis[i].body hide();
+		//level.zombis[i].body.lifeId = 1;
+    	level.zombis[i].body setcandamage(true);
+		level.zombis[i].body physicsLaunchServer((0,0,0), (0,0,0));
+		level.zombis[i].body.health = vidaola;
+		level.zombis[i].body linkto( level.zombis[i] );
+
 		level.zombis[i] thread Velocidades(i);
-		if(level.pared == 1)
-		{
-			level.zombis[i] thread AtacarJugador(i);
-		}
-		if(level.pared == 0)
-		{
-			level.zombis[i] thread AtacarJugadorParedes(i);
-		}
+
+		level.zombis[i] thread findAndMoveToPlayer(i);
+
 		level.zombis[i] thread VidadeZombies(i);
 		level.zombis[i] thread Matar(i);
 		level.zombis[i] thread NoBajoMapa(i);
 	}
 }
 
-AtacarJugador(i)
+findAndMoveToPlayer(i) //Thanks to Nukem
 {
-	while(1)
-	{
-		distancia = undefined;
-		objetivo = undefined;
-		self physicsLaunchServer((0,0,0), (0,0,0));
-		foreach( jugador in level.players )
-		{
-			if(!isAlive(jugador) && !bulletTracePassed(self getTagOrigin("j_head"),jugador getEye(),true,self) && jugador.sessionstate != "playing" && jugador.pers["team"] != "allies")
-                		continue;
-			if(distancesquared(self.origin, jugador.origin) < 9999999999)
-			{
-				distancia = distance(self.origin, jugador.origin);
-				objetivo = jugador;
-			}
-		}
-		Angulos = VectorToAngles( objetivo getEye() - self getTagOrigin( "j_head" ) );
-		self.angles = (0, Angulos[1], 0);
-		delante = self.origin + (0, 0, 25) + maps\mp\mod\_functions::vector_scal(anglestoforward(angulos), 25);
-		final = bullettrace(delante, delante + (0, 0, -200), false, self);
-		self moveto(final["position"],self.velocidad);
-	wait 0.08;
-	}
-}
+	self endon("death");
 
-AtacarJugadorParedes(i) //Thanks to Nukem
-{
-	for(;;)
+	while( true )
 	{
 		TmpDist = 999999999;
 		pTarget = undefined;
+
 		foreach( player in level.players )
 		{	
 			if(!isAlive(player))
@@ -198,9 +173,12 @@ AtacarJugadorParedes(i) //Thanks to Nukem
 			self.angles = (0, movetoLoc[1], 0);
 			delante = self.origin + (0, 0, 25) + maps\mp\mod\_functions::vector_scal(anglestoforward(self.angles), 25);
 			final = bullettrace(delante, delante + (0, 0, -200), false, self);
-			self moveto(final["position"],self.velocidad);
+			print( final["position"] );
+
+			if( distancesquared(self.origin, pTarget.origin) > level.config["ZOMBIE_ATTACK_RANGE"] )
+				self moveto(final["position"],self.velocidad);
 		}
-	wait 0.08;
+		wait .08;
 	}
 
 }
@@ -212,64 +190,69 @@ Velocidades(i)
 		case 0:
 		self.velocidad = 0.5;
 		self.sonido = "generic_death_russian_1";
-		self scriptModelPlayAnim("pb_stumble_walk_forward");
+		self.defAnim = "pb_stumble_walk_forward";
 		break;
 		case 1:
 		self.velocidad = 0.4;
 		self.sonido = "melee_knife_hit_watermelon";
-		self scriptModelPlayAnim("pb_sprint_shield"); 
+		self.defAnim = "pb_sprint_shield"; 
 		break;
 		case 2:
 		self.velocidad = 0.3;
 		self.sonido = "melee_knife_hit_watermelon";
-		self scriptModelPlayAnim("pb_hold_run"); 
+		self.defAnim = "pb_hold_run"; 
 		break;
 		case 3:
 		self.velocidad = 0.2;
 		self.sonido = "generic_death_russian_2";
-		self scriptModelPlayAnim("pb_sprint_pistol"); 
+		self.defAnim = "pb_sprint_pistol"; 
 		break;
 		case 4:
 		self.velocidad = 0.15;
 		self.sonido = "generic_death_russian_1";
-		self scriptModelPlayAnim("pb_sprint_akimbo");
+		self.defAnim = "pb_sprint_akimbo";
 		break;
 		case 5:
 		self.velocidad = 0.25;
 		self.sonido = "generic_death_russian_2";
-		self scriptModelPlayAnim("pb_sprint_pistol"); 
+		self.defAnim = "pb_sprint_pistol"; 
 		break;
 		case 6:
 		self.velocidad = 0.35;
 		self.sonido = "melee_knife_hit_watermelon";
-		self scriptModelPlayAnim("pb_hold_run"); 
+		self.defAnim = "pb_hold_run"; 
 		break;
 		case 7:
 		self.velocidad = 0.27;
 		self.sonido = "melee_knife_hit_watermelon";
-		self scriptModelPlayAnim("pb_sprint");
+		self.defAnim = "pb_sprint";
 		break;
 		case 8:
 		self.velocidad = 0.45;
 		self.sonido = "generic_death_russian_1";
-		self scriptModelPlayAnim("pb_walk_forward_akimbo");
+		self.defAnim = "pb_walk_forward_akimbo";
 		break;
 	}
+
+	self scriptModelPlayAnim( self.defAnim );
+	self.currAnim = self.defAnim;
 }
 
 VidadeZombies(i)
 {
 	while(1)
 	{
-		self.vida waittill("damage", eInflictor, attacker, victim, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
+		self.body waittill("damage", eInflictor, attacker, victim, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 		attacker thread maps\mp\gametypes\_damagefeedback::updateDamageFeedback(sHitLoc);
-		self.vida.health -= iDamage;
-              	playFx(level.bloodfx,self.origin);
-              	playFx(level.bloodfx,self.origin+(0,0,50));
-		if(self.vida.health <= 0)
+		self.body.health -= iDamage;
+
+      	playFx(level.bloodfx,self.origin);
+      	playFx(level.bloodfx,self.origin+(0,0,50));
+
+		if(self.body.health <= 0)
 		{
 			self notify("death");
-			self.vida delete();
+			self.body delete();
 			wait .1;
             self startRagDoll(0);
 
@@ -290,29 +273,60 @@ VidadeZombies(i)
 	}
 }
 
+doAnimation( _anim, ply )
+{
+	if( self.doingAnimation ){
+		return;
+	}
+
+	self.doingAnimation = true;
+
+	self ScriptModelPlayAnim(_anim);
+	self.currAnim = _anim;
+
+	wait .3;
+
+	if(distancesquared(ply.origin, self.origin) <= level.config["ZOMBIE_ATTACK_RANGE"] )
+	{
+		earthquake(0.7,1, ply.origin + (0,0,40), 60);
+		ply.health = ply.health - randomInt( 20 );
+		if(ply.health <= 0)
+		{
+			ply thread maps\mp\gametypes\_damage::finishPlayerDamageWrapper( self, self, 999999, 0, "MOD_MELEE", "none", ply.origin, ply.origin, "none", 0, 0 );
+		}
+	}
+
+	self.doingAnimation = false;
+}
+
 Matar(i)
 {
 	self endon("death");
+
 	for(;;)
 	{
+		self.attacking = false;
+
 		foreach( jugador in level.players )
 		{
-			if(distancesquared(jugador.origin, self.origin) <= 1500)
+
+			if(distancesquared(jugador.origin, self.origin) <= level.config["ZOMBIE_ATTACK_RANGE"])
 			{
+				self.attacking = true;
+
 				switch( randomInt(2) ){
 					case 0:
-						self ScriptModelPlayAnim("pt_melee_right2right_1");
+						self thread doAnimation("pt_melee_right2right_1", jugador );
 					case 1:
-						self ScriptModelPlayAnim("pt_stand_pullout_shield");
-				}
-
-				earthquake(0.7,1, self.origin + (0,0,40), 60);
-				jugador.health--;
-				if(jugador.health <= 0)
-				{
-					jugador thread maps\mp\gametypes\_damage::finishPlayerDamageWrapper( self, self, 999999, 0, "MOD_MELEE", "none", jugador.origin, jugador.origin, "none", 0, 0 );
+						self thread doAnimation("pt_stand_pullout_shield", jugador );
 				}
 			}
+		}
+
+		if( !self.attacking && self.currAnim != self.defAnim ){
+			self scriptModelPlayAnim( self.defAnim );
+			self.currAnim = self.defAnim;
+			self.doingAnimation = false;
 		}
 
 	wait 0.07;
@@ -327,97 +341,97 @@ NoBajoMapa(i)
 		if((self.origin[2] < -2000) && (getDvar("mapname") == "mp_afghan") && level.edicion == 0)
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -3500) && (getDvar("mapname") == "mp_afghan") && level.edicion == 1)
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -50) && (getDvar("mapname") == "mp_derail"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -130) && (getDvar("mapname") == "mp_estate"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 6000) && (getDvar("mapname") == "mp_fuel2"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -20) && (getDvar("mapname") == "mp_trailerpark"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 3198) && (getDvar("mapname") == "mp_highrise"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 63) && (getDvar("mapname") == "mp_invasion"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -100) && (getDvar("mapname") == "mp_brecourt"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -120) && (getDvar("mapname") == "mp_rundown"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 200) && (getDvar("mapname") == "mp_underpass"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 30) && (getDvar("mapname") == "mp_compact"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -250) && (getDvar("mapname") == "mp_overgrown"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -20) && (getDvar("mapname") == "mp_abandon"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -800) && (getDvar("mapname") == "mp_rust"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -200) && (getDvar("mapname") == "mp_boneyard"))
 		{
 			self delete();
-			self.vida delete();
+			self.body delete();
 			break;
 		}
 	wait 0.05;
