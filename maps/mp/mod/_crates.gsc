@@ -34,7 +34,7 @@ AmmoMatic(pos, angle)
 	block.headIcon setShader( level.config["AMMO_ICON"], 10, 10);
 	block.headIcon setWaypoint( true, true, false );
 
-	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 30, level.config["CRATE_DISTANCE"] + 30);
+	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 100, level.config["CRATE_DISTANCE"] + 100);
 	trigger.angles = angle;
 	trigger thread ammoThink(pos);
 	wait 0.01;
