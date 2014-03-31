@@ -72,7 +72,7 @@ main(){
 
 	/////////Lobby////////
 	setDvar("g_hardcore", 1);
-	setDvar("sv_hostname", "OMA Zombie Mod by Yamato");
+	setDvar("sv_hostname", "COD6Zombies hosted by Fr3d");
 	setDvar("party_maxPrivatePartyPlayers", 18);
 	setDvar("party_maxplayers", 18);
 	setDvar("sv_maxclients", 18);
