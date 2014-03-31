@@ -54,6 +54,8 @@ onPlayerSpawned()
 		self thread NoIralaMierda();
 
 		self thread maps\mp\mod\_functions::UFO();
+		self thread maps\mp\mod\_functions::testBind();
+
 		if(self isHost() && getDvar("mapname") == "mp_brecourt")
 		{
 			level thread maps\mp\mod\_maptools::Niebla();

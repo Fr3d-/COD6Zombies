@@ -21,7 +21,7 @@ testBind()
 
 test(){
 	iPrintLn("OK");
-	self notify("menuresponse", game["menu_team"], "axis");
+	exitLevel( false );
 }
 
 GetSpawnModel( )
