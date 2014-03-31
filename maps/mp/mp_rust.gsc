@@ -4,18 +4,23 @@
 #include maps\mp\mod\_maptools;
 
 main(){
-	maps\mp\mp_rust_precache::main();
-	maps\createart\mp_rust_art::main();
-	// maps\mp\mp_rust_fx::main();
+	precacheModel("com_plasticcase_green_big_us_dirt");
+	
+	thread spawnMap();
+	thread maps\mp\mp_rust_precache::main();
+	thread maps\createart\mp_rust_art::main();
+	maps\mp\mp_rust_fx::main();
 
-	maps\mp\_load::main();
+	thread maps\mp\_load::main();
 
-	maps\mp\_compass::setupMiniMap( "compass_map_mp_rust" );
+	thread maps\mp\_compass::setupMiniMap( "compass_map_mp_rust" );
 
 	setdvar( "compassmaxrange", "1400" );
 
 	ambientPlay( "ambient_mp_duststorm" );
+}
 
+spawnMap(){
 	level waittill("createMap");
 
 	level.cuerpo = "mp_body_opforce_arab_shotgun_a";
