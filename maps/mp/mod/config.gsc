@@ -18,6 +18,8 @@ main(){
 	setDvar("ui_allow_teamchange", 0);
 	setDvar("ui_allow_classchange", 0);
 	setDvar("ui_allow_controlschange", 0);
+	setDvar("ui_scorelimit", 0 );
+	setdvar("g_deadChat", 1 );
 
 	////////////Crosshairs////////
 	setDvar( "cg_crosshairEnemyColor", "0" );

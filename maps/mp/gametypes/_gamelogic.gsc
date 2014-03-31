@@ -1453,16 +1453,6 @@ Callback_StartGameType()
 	level.alivePlayers["allies"] = [];
 	level.alivePlayers["axis"] = [];
 	level.activePlayers = [];
-
-	makeDvarServerInfo( "ui_scorelimit", 0 );
-	makeDvarServerInfo( "ui_allow_classchange", getDvar( "ui_allow_classchange" ) );
-	makeDvarServerInfo( "ui_allow_teamchange", 1 );
-	setDvar( "ui_allow_teamchange", 1 );
-	
-	if ( getGametypeNumLives() )
-		setdvar( "g_deadChat", 0 );
-	else
-		setdvar( "g_deadChat", 1 );
 	
 	waveDelay = getDvarInt( "scr_" + level.gameType + "_waverespawndelay" );
 	if ( waveDelay )
