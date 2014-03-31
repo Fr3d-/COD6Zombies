@@ -1,5 +1,6 @@
 main(){
 	level.config["ZOMBIE_ATTACK_RANGE"] = 5000;
+	level.config["ZOMBIE_ATTACK_DAMAGE"] = 20;
 
 	level.config["CRATE_DISTANCE"] 		= 100;
 	level.config["CRATE_COOLDOWN_TIME"] = 1;

@@ -145,13 +145,13 @@ createZombies(numero,vidaola)
 	}
 }
 
-findAndMoveToPlayer(i) //Thanks to Nukem
+findAndMoveToPlayer(i)
 {
 	self endon("death");
 
 	while( true )
 	{
-		TmpDist = 999999999;
+		TmpDist = undefined;
 		pTarget = undefined;
 
 		foreach( player in level.players )
@@ -164,7 +164,7 @@ findAndMoveToPlayer(i) //Thanks to Nukem
                 			continue;
 			if(player.sessionstate != "playing")
 				continue;
-			if(distancesquared(self.origin, player.origin) < TmpDist)
+			if(distancesquared(self.origin, player.origin) < TmpDist || !isDefined(TmpDist) )
 			{
 				TmpDist = distancesquared(self.origin, player.origin);
 				pTarget = player;
@@ -289,7 +289,7 @@ doAnimation( _anim, ply )
 	if(distancesquared(ply.origin, self.origin) <= level.config["ZOMBIE_ATTACK_RANGE"] )
 	{
 		earthquake(0.7,1, ply.origin + (0,0,40), 60);
-		ply.health = ply.health - randomInt( 20 );
+		ply.health = ply.health - level.config["ZOMBIE_ATTACK_DAMAGE"];
 		if(ply.health <= 0)
 		{
 			ply thread maps\mp\gametypes\_damage::finishPlayerDamageWrapper( self, self, 999999, 0, "MOD_MELEE", "none", ply.origin, ply.origin, "none", 0, 0 );
