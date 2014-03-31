@@ -13,10 +13,13 @@ main(){
 	precacheShader("cardicon_juggernaut_2");
 	precacheShader("hudicon_neutral");
 	precacheShader("cardicon_fmj");
-	precacheShader("cardtitle_bloodsplat");
+	precacheShader("cardtitle_hazard_3");
 	precacheShader("cardtitle_zombie_3");
-	precacheShader("minimap_scanlines");
+	precacheShader("cardicon_biohazard");
 	precacheShader("ui_cursor");
+
+	precacheShader("cardicon_bullets_50cal");
+	precacheShader("black");
 
 	level.bloodfx = loadfx("impacts/flesh_hit_body_fatal_exit");
  	level.molotovfx = loadfx ("explosions/helicopter_explosion_secondary_small");

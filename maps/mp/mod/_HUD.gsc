@@ -7,133 +7,289 @@ setupHUD(){
 	if( !isDefined(self.hud) )
 		self.hud = [];
 
-	self thread healthHUD();
+	self thread waveHUD();
 	self thread ammoHUD();
-	self thread roundHUD();
 	self thread moneyHUD();
 	self thread scoreHUD();
 }
 
-healthHUD(){
-	self.useBar = createPrimaryProgressBar( -250 );
-	self.useBar.bar.x = 260;
-	self.useBar.x = 320;
-	self.useBar.bar.y = -135;
-	self.useBar.y = -135;
-	for(;;)
-	{
-		self.usebar updateBar( self.health/100, 100 );
-		if(self.health < 75 && self.health < 50 != true)
-		{
-			self.usebar.color = (0,0,0);
-			self.usebar.bar.color = (0.3,0,1);
-			self.usebar.alpha = 0.5;
-		}
-		else if(self.health < 50 && self.health > 25)
-		{
-			self.usebar.color = (0,0,0);
-			self.usebar.bar.color = (0.9,0,1);
-			self.usebar.alpha = 1;
-		}
-		else if(self.health < 50)
-		{
-			self.usebar.color = (0,0,0);
-			self.usebar.bar.color = (1,0,0);
-			self.usebar.alpha = 0.5;
-		}
-		else if(self.health > 75)
-		{
-			self.usebar.color = (0,0,0);
-			self.usebar.bar.color = (0,0,1);
-			self.usebar.alpha = 0.5;
-		}
-	  wait 0.05;
-	}
-
-	self thread destroyOnDeath( self.usebar );
-}
-
-ammoHUD()
-{	
-	self.Blood = createIcon("cardtitle_bloodsplat", 150, 32);
-	self.Blood setPoint( "", "", 320, -190);   
-
-	self.ZombiHud = createIcon("cardtitle_zombie_3", 150, 28);
-	self.ZombiHud setPoint( "", "", 320, -160);   
-	self.ammoBoard = self createFontString( "default", 2 );
-	self.ammoBoard setPoint( "", "", 310, -115);
-
-	self.stockBoard = self createFontString( "default", 2 );
-	self.stockBoard setPoint( "", "", 349, -115);
-
-	self.ammoBoard3 = self createFontString( "default", 2 );
-	self.ammoBoard3 setPoint( "", "", 330, -115);
-	self.ammoBoard3 setText("/");
-
-	while(1)
-	{
-		self.Clip = self getWeaponAmmoClip(self getCurrentWeapon());
-		self.Stock = self getWeaponAmmoStock(self getCurrentWeapon());
-		self.ammoBoard setValue(self.Clip);
-		self.stockBoard setValue(self.Stock);
-
-		if(self getWeaponAmmoClip(self getCurrentWeapon()) <= 5)
-		{
-			self.ammoBoard.color = (1,0,0);
-		}
-		else
-		{
-			self.ammoBoard.color = (255, 255, 255);
-		}
-		if(self getWeaponAmmoStock(self getCurrentWeapon()) <= 5)
-		{
-			self.stockBoard.color = (1,0,0);
-		}
-		else
-		{
-			self.stockBoard.color = (255, 255, 255);
-		}
-		wait 0.1;
-	}
-
-	destroyOnDeath( self.Blood );
-	destroyOnDeath( self.ZombiHud );
-	destroyOnDeath( self.ammoBoard );
-	destroyOnDeath( self.stockBoard );
-	destroyOnDeath( self.ammoBoard3 );
-}
-
-roundHUD(){
+waveHUD(){
 	self endon("disconnect");
 	self endon("death");
 
-	self.Ronda = self createFontString( "objective", 2 );
-	self.Ronda setPoint( "", "",320,-165);
+	xPos = -40;
+	yPos = 0;
 
-	while(1)
-	{
-		self.Ronda setText("Round:" + level.ola);
-		wait 0.15;
+	margin = 5;
+
+	self.HUDcurrZombies = maps\mp\mod\_functions::Zombiesconvida();
+	self.HUDoldZombies = self.currZombies;
+
+	self.waveHUD = newClientHudElem( self );
+	self.waveHUD.alignX = "noscale";
+	self.waveHUD.alignY = "noscale";
+	self.waveHUD.horzAlign = "left";
+	self.waveHUD.vertAlign = "bottom";
+	self.waveHUD.x = xPos + 16 + margin;
+	self.waveHUD.y = yPos;
+	self.waveHUD.foreground = true;
+	self.waveHUD.fontScale = 1.5;
+	self.waveHUD.font = "objective";
+	self.waveHUD.alpha = 1;
+	self.waveHUD.glow = 1;
+	self.waveHUD.glowColor = ( 0, 1, 0 );
+	self.waveHUD.glowAlpha = 0;
+	
+	if( self.HUDcurrZombies == 0 )
+		self.waveHUD.color = ( 1, 0, 0 );
+	else
+		self.waveHUD.color = ( 1, ( self.HUDcurrZombies / level.ztotal[level.ola]), 0 );
+
+	self.waveHUD.hideWhenInMenu = true;
+	self.waveHUD setValue( self.HUDcurrZombies );
+
+	self.waveShader = newClientHudElem( self );
+	self.waveShader.alignX = "noscale";
+	self.waveShader.alignY = "noscale";
+	self.waveShader.horzAlign = "left";
+	self.waveShader.vertAlign = "bottom";
+	self.waveShader.x = xPos;
+	self.waveShader.y = yPos + 1;
+	self.waveShader.foreground = true;
+	self.waveShader.alpha = 1;
+	self.waveShader.hideWhenInMenu = true;
+	self.waveShader setShader( "cardicon_biohazard", 16, 16 );
+	self.waveShader.shader = "cardicon_biohazard";
+
+	if( self.HUDcurrZombies == 0 )
+		self.waveShader.color = ( 1, 0, 0 );
+	else
+		self.waveShader.color = ( 1, ( self.HUDcurrZombies / level.ztotal[level.ola]), 0 );
+
+	margin = 5;
+
+	self.waveBGShader = newClientHudElem( self );
+	self.waveBGShader.alignX = "noscale";
+	self.waveBGShader.alignY = "noscale";
+	self.waveBGShader.horzAlign = "left";
+	self.waveBGShader.vertAlign = "bottom";
+	self.waveBGShader.x = xPos - margin;
+	self.waveBGShader.y = yPos + 1 - margin;
+	self.waveBGShader.foreground = false;
+	self.waveBGShader.alpha = .6;
+	self.waveBGShader.hideWhenInMenu = true;
+	self.waveBGShader setShader( "black", 62, margin + 16 + margin );
+	self.waveBGShader.shader = "black";
+
+	self thread destroyOnDeath( self.waveShader );
+	self thread destroyOnDeath( self.waveHUD );
+	self thread destroyOnDeath( self.waveBGShader );
+
+	self thread waveHUDThink();
+}
+
+waveHUDThink(){
+	self endon("death");
+
+	for( ;; ){
+		self.HUDcurrZombies = maps\mp\mod\_functions::Zombiesconvida();
+
+		if( self.HUDcurrZombies != self.HUDoldZombies ){
+
+			self.waveHUD setValue( self.HUDcurrZombies );
+			self.waveHUD.color = ( 1, ( (self.HUDcurrZombies / level.ztotal[level.ola])), 0 );
+			self.waveShader.color = ( 1, ( (self.HUDcurrZombies / level.ztotal[level.ola])), 0 );
+
+			self.HUDoldZombies = self.HUDcurrZombies;
+		}
+		
+		wait .1;
+	}
+}
+
+ammoHUD(){
+	xPos = -60;
+	yPos = 0;
+
+	margin = 5;
+
+	self.ammoClipHUD = newClientHudElem( self );
+	self.ammoClipHUD.alignX = "noscale";
+	self.ammoClipHUD.alignY = "noscale";
+	self.ammoClipHUD.horzAlign = "right";
+	self.ammoClipHUD.vertAlign = "bottom";
+	self.ammoClipHUD.x = xPos + 16 + margin;
+	self.ammoClipHUD.y = yPos;
+	self.ammoClipHUD.foreground = true;
+	self.ammoClipHUD.fontScale = 1.5;
+	self.ammoClipHUD.font = "objective";
+	self.ammoClipHUD.alpha = 1;
+	self.ammoClipHUD.glow = 1;
+	self.ammoClipHUD.glowColor = ( 0, 1, 0 );
+	self.ammoClipHUD.glowAlpha = 0;
+	self.ammoClipHUD.color = ( 1.0, 1.0, 0 );
+	self.ammoClipHUD.hideWhenInMenu = true;
+	self.ammoClipHUD setValue( 0 );
+
+	self.ammoStockHUD = newClientHudElem( self );
+	self.ammoStockHUD.alignX = "noscale";
+	self.ammoStockHUD.alignY = "noscale";
+	self.ammoStockHUD.horzAlign = "right";
+	self.ammoStockHUD.vertAlign = "bottom";
+	self.ammoStockHUD.x = xPos + 16 + margin + 35 + margin * 2;
+	self.ammoStockHUD.y = yPos;
+	self.ammoStockHUD.foreground = true;
+	self.ammoStockHUD.fontScale = 1.5;
+	self.ammoStockHUD.font = "objective";
+	self.ammoStockHUD.alpha = 1;
+	self.ammoStockHUD.glow = 1;
+	self.ammoStockHUD.glowColor = ( 0, 1, 0 );
+	self.ammoStockHUD.glowAlpha = 0;
+	self.ammoStockHUD.color = ( 1.0, 1.0, 0 );
+	self.ammoStockHUD.hideWhenInMenu = true;
+	self.ammoStockHUD setValue( 0 );
+
+	self.ammoHUDSeperator = newClientHudElem( self );
+	self.ammoHUDSeperator.alignX = "noscale";
+	self.ammoHUDSeperator.alignY = "noscale";
+	self.ammoHUDSeperator.horzAlign = "right";
+	self.ammoHUDSeperator.vertAlign = "bottom";
+	self.ammoHUDSeperator.x = xPos + 16 + margin + 35;
+	self.ammoHUDSeperator.y = yPos;
+	self.ammoHUDSeperator.foreground = true;
+	self.ammoHUDSeperator.fontScale = 1.5;
+	self.ammoHUDSeperator.font = "objective";
+	self.ammoHUDSeperator.alpha = 1;
+	self.ammoHUDSeperator.glow = 1;
+	self.ammoHUDSeperator.glowColor = ( 0, 1, 0 );
+	self.ammoHUDSeperator.glowAlpha = 0;
+	self.ammoHUDSeperator.color = ( 1.0, 1.0, 0 );
+	self.ammoHUDSeperator.hideWhenInMenu = true;
+	self.ammoHUDSeperator setText("|");
+
+	self.ammoShader = newClientHudElem( self );
+	self.ammoShader.alignX = "noscale";
+	self.ammoShader.alignY = "noscale";
+	self.ammoShader.horzAlign = "right";
+	self.ammoShader.vertAlign = "bottom";
+	self.ammoShader.x = xPos;
+	self.ammoShader.y = yPos + 1;
+	self.ammoShader.foreground = true;
+	self.ammoShader.alpha = 1;
+	self.ammoShader.hideWhenInMenu = true;
+	self.ammoShader setShader( "cardicon_bullets_50cal", 16, 16 );
+	self.ammoShader.shader = "cardicon_bullets_50cal";
+	self.ammoShader.color = ( 1, 1, 0 );
+
+	self.ammoBGShader = newClientHudElem( self );
+	self.ammoBGShader.alignX = "noscale";
+	self.ammoBGShader.alignY = "noscale";
+	self.ammoBGShader.horzAlign = "right";
+	self.ammoBGShader.vertAlign = "bottom";
+	self.ammoBGShader.x = xPos - margin;
+	self.ammoBGShader.y = yPos + 1 - margin;
+	self.ammoBGShader.foreground = false;
+	self.ammoBGShader.alpha = .6;
+	self.ammoBGShader.hideWhenInMenu = true;
+	self.ammoBGShader setShader( "black", 114, margin + 16 + margin );
+	self.ammoBGShader.shader = "black";
+
+	self thread destroyOnDeath( self.ammoClipHUD );
+	self thread destroyOnDeath( self.ammoStockHUD );
+	self thread destroyOnDeath( self.ammoHUDSeperator );
+	self thread destroyOnDeath( self.ammoShader );
+	self thread destroyOnDeath( self.ammoBGShader );
+
+	self.currWep = self getCurrentWeapon();
+	self.ammoClip = self getWeaponAmmoClip( self.currWep );
+	self.ammoStock = self getWeaponAmmoStock( self.currWep );
+
+	if( self.currWep != "none" ){
+		self.ammoClipHUD setValue( self.ammoClip );
+		self.ammoStockHUD setValue( self.ammoStock );
+
+		self.ammoClipHUD.x = xPos + 16 + margin;
+		self.ammoClipHUD.y = yPos;
+
+		if( self.ammoClip < 100 && self.ammoClip > 9 ){
+			self.ammoClipHUD.x += 10;
+		} else if( self.ammoClip < 10 && self.ammoClip >= 0 ) {
+			self.ammoClipHUD.x += 20;
+		}
 	}
 
-	destroyOnDeath(self.Ronda);
+	self thread ammoHUDThink( xPos, yPos, margin );
+}
+
+ammoHUDThink( xPos, yPos, margin ){
+	for( ;; ){
+		if( self.ammoClip != self getWeaponAmmoClip( self.currWep ) || self.ammoStock != self getWeaponAmmoStock( self.currWep ) || self.currWep != self getCurrentWeapon() ){
+			self.currWep = self getCurrentWeapon();
+			self.ammoClip = self getWeaponAmmoClip( self.currWep );
+			self.ammoStock = self getWeaponAmmoStock( self.currWep );
+
+			if( self.currWep == "none" )
+				continue;
+
+			self.ammoClipHUD setValue( self.ammoClip );
+			self.ammoStockHUD setValue( self.ammoStock );
+
+			self.ammoClipHUD.x = xPos + 16 + margin;
+			self.ammoClipHUD.y = yPos;
+
+			if( self.ammoClip < 100 && self.ammoClip > 9 ){
+				self.ammoClipHUD.x += 10;
+			} else if( self.ammoClip < 10 && self.ammoClip >= 0 ) {
+				self.ammoClipHUD.x += 20;
+			}
+		}
+
+		wait .001;
+	}
 }
 
 moneyHUD(){
-	self endon("disconnect");
-	self endon("death");
+	self.money = level.config["PLAYER_START_MONEY"];
+	self.oldMoney = self.money;
 
-	self.dinero = level.config["PLAYER_START_MONEY"];
-  	self.dineroS = self createFontString( "objective", 2 );
-	self.dineroS setPoint( "", "",320,-190);
+	xPos = -55;
+	yPos = -30;
 
-	while(1)
-	{
-		self.dineroS setText("Cash:" + self.dinero);
-		wait 0.15;
+	margin = 5;
+
+	self.moneyHUD = newClientHudElem( self );
+	self.moneyHUD.alignX = "noscale";
+	self.moneyHUD.alignY = "noscale";
+	self.moneyHUD.horzAlign = "right";
+	self.moneyHUD.vertAlign = "bottom";
+	self.moneyHUD.x = xPos + 16 + margin;
+	self.moneyHUD.y = yPos;
+	self.moneyHUD.foreground = true;
+	self.moneyHUD.fontScale = 1.5;
+	self.moneyHUD.font = "objective";
+	self.moneyHUD.alpha = 1;
+	self.moneyHUD.glow = 1;
+	self.moneyHUD.glowColor = ( 0, 1, 0 );
+	self.moneyHUD.glowAlpha = 0;
+	self.moneyHUD.color = ( 1.0, 1.0, 0 );
+	self.moneyHUD.hideWhenInMenu = true;
+	self.moneyHUD setText( "$  " + self.money );
+
+	self thread destroyOnDeath( self.moneyHUD );
+
+	self thread moneyHUDThink();
+}
+
+moneyHUDThink(){
+	for( ;; ){
+		if( self.oldMoney != self.money ){
+			self.moneyHUD setText( "$  " + self.money );
+
+			self.oldMoney = self.money;
+		}
+
+		wait .05;
 	}
-
-	destroyOnDeath(self.dineroS);
 }
 
 scoreHUD(){

@@ -122,6 +122,7 @@ createZombies(numero,vidaola)
 
 		level.zombis[i].doingAnimation = false;
 		level.zombis[i].team = "axis";
+		level.zombis[i].isAlive = true;
 
 		level.zombis[i].body = spawn("script_model", level.zombis[i].origin + (0,0,30) ); 
 		level.zombis[i].body setModel("com_plasticcase_enemy");
@@ -251,6 +252,7 @@ VidadeZombies(i)
 
 		if(self.body.health <= 0)
 		{
+			self.isAlive = false;
 			self notify("death");
 			self.body delete();
 			wait .1;
@@ -260,7 +262,7 @@ VidadeZombies(i)
 			self playSound( self.sonido );
 
 			attacker.kills++;
-			attacker.dinero += 100;
+			attacker.money += 100;
 			attacker.pers["kills"] = attacker.kills;
 			attacker.score += 100;
 			attacker.pers["score"] = attacker.score;
@@ -479,7 +481,6 @@ onPlayerConnect()
 
 		player thread onPlayerSpawned();
 		player thread UnirseaAliados();
-		player thread Marcadores(player);
 		level thread HumanosDevorados();
 	}
 }
@@ -519,25 +520,5 @@ onPlayerSpawned()
 		self.health = 100;
 		self.maxhealth = 100;
 		//self thread Coordinates();
-	}
-}
-
-Marcadores(player)
-{
-	self endon("disconnect");
-	player notifyOnPlayerCommand("showHost", "+scores");
-	player notifyOnPlayerCommand("hideHost", "-scores");
-	if (isDefined(player.hostname)) player.hostname destroy();
-	for(;;)
-	{
-		player waittill("showHost");
-		player thread maps\mp\mod\_survivors::DestruirTodoelHUD();
-		player.hostname = player createFontString("hudmedium", 1.4);
-		player.hostname setPoint("BOTTOMLEFT", "BOTTOMLEFT", 85, -25);
-		player.hostname setText( level.hostname );
-		player waittill("hideHost");
-		player.hostname destroy();
-		player.scorebartop destroy();
-		player thread maps\mp\mod\_survivors::Pantalla();
 	}
 }

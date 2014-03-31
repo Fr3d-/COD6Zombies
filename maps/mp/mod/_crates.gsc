@@ -53,10 +53,10 @@ ammoThink(pos)
 	  		ply setLowerMessage("activate", "^7[^1" + level.config["AMMO_NAME"] + "^7][^3" + level.config["AMMO_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for an ammo refill");
 
 	  		if( ply useButtonPressed() ){
-	  			if( ply.dinero >= level.config["AMMO_PRICE"] ){
+	  			if( ply.money >= level.config["AMMO_PRICE"] ){
 
 					ply ClearLowerMessage("activate", 1);
-					ply.dinero -= level.config["AMMO_PRICE"];
+					ply.money -= level.config["AMMO_PRICE"];
 					ply maps\mp\killstreaks\_airdrop::refillAmmo();  
 					ply playLocalSound( "ammo_crate_use" );
 					ply thread Millonario();
@@ -192,10 +192,10 @@ randomCrateThink(pos, angle)
 	  		ply setLowerMessage("activate", "^7[^1" + level.config["RAND_NAME"] + "^7][^3" + level.config["RAND_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
 
 	  		if( ply useButtonPressed() ){
-	  			if( ply.dinero >= level.config["RAND_PRICE"] ){
+	  			if( ply.money >= level.config["RAND_PRICE"] ){
 
 					ply ClearLowerMessage("activate", 1);
-					ply.dinero -= level.config["RAND_PRICE"];
+					ply.money -= level.config["RAND_PRICE"];
 					ply thread Millonario();
 					ply playLocalSound("ui_mp_timer_countdown");
 					ply thread randomCrateGiveWeapon(pos);
