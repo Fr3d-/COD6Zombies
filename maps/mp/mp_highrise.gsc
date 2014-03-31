@@ -4,6 +4,25 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	maps\mp\mp_highrise_precache::main();
+	maps\createart\mp_highrise_art::main();
+	//maps\mp\mp_highrise_fx::main();
+	maps\mp\_explosive_barrels::main();
+	maps\mp\_load::main();
+
+	maps\mp\_compass::setupMiniMap( "compass_map_mp_highrise" );
+
+	setdvar( "r_lightGridEnableTweaks", 1 );
+	setdvar( "r_lightGridIntensity", 1.11 );
+	setdvar( "r_lightGridContrast", .9 );
+
+	//VisionSetNaked( "mp_highrise" );
+	//ambientPlay( "embient_mp_highrise" );
+
+	// raise up planes to avoid them flying through buildings
+	level.airstrikeHeightScale = 3;
+
+	setdvar( "compassmaxrange", "2100" );
 	level waittill("createMap");
 	
 	level.cuerpo = "mp_body_airborne_shotgun_c";

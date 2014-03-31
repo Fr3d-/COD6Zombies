@@ -4,8 +4,20 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	maps\mp\mp_rust_precache::main();
+	maps\createart\mp_rust_art::main();
+	// maps\mp\mp_rust_fx::main();
+
+	maps\mp\_load::main();
+
+	maps\mp\_compass::setupMiniMap( "compass_map_mp_rust" );
+
+	setdvar( "compassmaxrange", "1400" );
+
+	ambientPlay( "ambient_mp_duststorm" );
+
 	level waittill("createMap");
-	
+
 	level.cuerpo = "mp_body_opforce_arab_shotgun_a";
 	level.vision = "icbm";
 	level.reaparicion = (163,-2573,-160);
