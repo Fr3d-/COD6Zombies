@@ -192,7 +192,7 @@ randomCrateThink(pos, angle)
 	  		ply setLowerMessage("activate", "^7[^1" + level.config["RAND_NAME"] + "^7][^3" + level.config["RAND_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
 
 	  		if( ply useButtonPressed() ){
-	  			if( ply.dinero >= level.config["RAND_NAME"] ){
+	  			if( ply.dinero >= level.config["RAND_PRICE"] ){
 
 					ply ClearLowerMessage("activate", 1);
 					ply.dinero -= level.config["RAND_PRICE"];
