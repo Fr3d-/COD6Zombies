@@ -55,11 +55,11 @@ onPlayerSpawned()
 		wait 0.05;
 		self notify("menuresponse", "changeclass", "class1");
 		self thread Superviviente();
-		self thread Pantalla();
-		self thread Dinerillo();
 		self thread onDeath();
 		self thread NoIralaMierda();
 
+		self thread maps\mp\mod\_HUD::setupHUD();
+		
 		self thread maps\mp\mod\_functions::UFO();
 		self thread maps\mp\mod\_functions::testBind();
 
@@ -80,7 +80,6 @@ onDeath()
         self.sessionstate = "spectator";
         self setContents( 0 );
 		self.tieneque = 1;
-		self thread DestruirTodoelHUD();
 	}
 }
 
@@ -138,139 +137,6 @@ SiempreHumanos()
 		}
 	wait 0.05;
 	}
-}
-
-Dinerillo()
-{
-	self endon("disconnect");
-	self endon("death");
-	self.dinero = level.config["PLAYER_START_MONEY"];
-      	self.dineroS = self createFontString( "objective", 2 );
-	self.dineroS setPoint( "", "",320,-190);
-      	self thread Destruirhud(self.dineroS);
-	while(1)
-	{
-		self.dineroS setText("Cash:" + self.dinero);
-		wait 0.15;
-	}
-}
-
-Pantalla()
-{
-	self endon("disconnect");
-	self endon("death");
-	wait 0.1;
-      	self.Ronda = self createFontString( "objective", 2 );
-	self.Ronda setPoint( "", "",320,-165);
-      	self thread Destruirhud(self.Ronda);
-      	self thread Destruirhudr(self.Ronda);
-	self thread BarradeVida();
-	self thread ContadorMunicion();
-	while(1)
-	{
-		self.Ronda setText("Round:" + level.ola);
-		wait 0.15;
-	}
-}
-
-
-ContadorMunicion()
-{	
-      	self.Blood = createIcon("cardtitle_bloodsplat", 150, 32);
-      	self.Blood setPoint( "", "", 320, -190);   
-      	self thread Destruirhud(self.Blood);
-      	self thread Destruirhudr(self.Blood);
-      	self.ZombiHud = createIcon("cardtitle_zombie_3", 150, 28);
-      	self.ZombiHud setPoint( "", "", 320, -160);   
-      	self thread Destruirhud(self.ZombiHud);
-      	self thread Destruirhudr(self.ZombiHud);
-       	self.ammoBoard = self createFontString( "default", 2 );
-	self.ammoBoard setPoint( "", "", 310, -115);
-      	self thread Destruirhud(self.ammoBoard);
-      	self thread Destruirhudr(self.ammoBoard);
-      	self.stockBoard = self createFontString( "default", 2 );
-	self.stockBoard setPoint( "", "", 349, -115);
-      	self thread Destruirhud(self.stockBoard);
-      	self thread Destruirhudr(self.stockBoard);
-      	self.ammoBoard3 = self createFontString( "default", 2 );
-	self.ammoBoard3 setPoint( "", "", 330, -115);
-	self.ammoBoard3 setText("/");
-      	self thread Destruirhud(self.ammoBoard3);
-     	self thread Destruirhudr(self.ammoBoard3);
-	while(1)
-	{
-	      	self.Clip = self getWeaponAmmoClip(self getCurrentWeapon());
-            		self.Stock = self getWeaponAmmoStock(self getCurrentWeapon());
-	      	self.ammoBoard setValue(self.Clip);
-            		self.stockBoard setValue(self.Stock);
-		if(self getWeaponAmmoClip(self getCurrentWeapon()) <= 5)
-		{
-			self.ammoBoard.color = (1,0,0);
-		}
-		else
-		{
-			self.ammoBoard.color = (255, 255, 255);
-		}
-		if(self getWeaponAmmoStock(self getCurrentWeapon()) <= 5)
-		{
-			self.stockBoard.color = (1,0,0);
-		}
-		else
-		{
-			self.stockBoard.color = (255, 255, 255);
-		}
-            	wait 0.1;
-	}
-}
-
-BarradeVida()
-{
-        	self.useBar = createPrimaryProgressBar( -250 );
-    	self.useBar.bar.x = 260;
-    	self.useBar.x = 320;
-    	self.useBar.bar.y = -135;
-    	self.useBar.y = -135;
-	for(;;)
-        	{
-                	self.usebar updateBar( self.health/100, 100 );
-                	if(self.health < 75 && self.health < 50 != true)
-                	{
-						self.usebar.color = (0,0,0);
-						self.usebar.bar.color = (0.3,0,1);
-						self.usebar.alpha = 0.5;
-                	}
-                	else if(self.health < 50 && self.health > 25)
-                	{
-						self.usebar.color = (0,0,0);
-						self.usebar.bar.color = (0.9,0,1);
-						self.usebar.alpha = 1;
-                	}
-                	else if(self.health < 50)
-                	{
-						self.usebar.color = (0,0,0);
-						self.usebar.bar.color = (1,0,0);
-						self.usebar.alpha = 0.5;
-                	}
-                	else if(self.health > 75)
-                	{
-						self.usebar.color = (0,0,0);
-						self.usebar.bar.color = (0,0,1);
-						self.usebar.alpha = 0.5;
-                	}
-              wait 0.05;
-        	}
-}
-
-DestruirTodoelHUD()
-{
-	self.Ronda destroy();
-	self.useBar destroy();
-	self.useBar.bar destroy();
-	self.Blood destroy();
-	self.ZombiHud destroy();
-	self.ammoBoard destroy();
-	self.stockBoard destroy();
-	self.ammoBoard3 destroy();
 }
 
 Superviviente()
