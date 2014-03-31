@@ -30,8 +30,8 @@ init()
 	level._effect["thermal_beacon"] = loadFx("misc/thermal_beacon_inverted");	
 	effect = level._effect["thermal_beacon"];
 	PrecacheFxTeamThermal( effect, "J_Spine4" );
-              precacheShader("cardicon_porterjustice");
-              precacheShader("cardicon_ghillie");
+	precacheShader("cardicon_taskforcearmy01");
+	precacheShader("cardicon_sami");
 
 	setPlayerModels();
 
@@ -57,17 +57,17 @@ init()
 
 initScoreBoard()
 {
-	setDvar("g_TeamName_Allies", "^4Humans");
-	setDvar("g_TeamIcon_Allies", "cardicon_porterjustice");
-	setDvar("g_TeamIcon_MyAllies", "cardicon_porterjustice");
-	setDvar("g_TeamIcon_EnemyAllies", "cardicon_porterjustice");
+	setDvar("g_TeamName_Allies", "^4Alpha Team");
+	setDvar("g_TeamIcon_Allies", "cardicon_taskforcearmy01");
+	setDvar("g_TeamIcon_MyAllies", "cardicon_taskforcearmy01");
+	setDvar("g_TeamIcon_EnemyAllies", "cardicon_taskforcearmy01");
 	scoreColor = getTeamColor( "allies" );	
 	setDvar("g_ScoresColor_Allies", scoreColor[0] + " " + scoreColor[1] + " " + scoreColor[2] );
 
-	setDvar("g_TeamName_Axis", "^1Zombies");
-	setDvar("g_TeamIcon_Axis", "cardicon_ghillie");
-	setDvar("g_TeamIcon_MyAxis", "cardicon_ghillie");
-	setDvar("g_TeamIcon_EnemyAxis", "cardicon_ghillie");
+	setDvar("g_TeamName_Axis", "^5Beta Team");
+	setDvar("g_TeamIcon_Axis", "cardicon_sami");
+	setDvar("g_TeamIcon_MyAxis", "cardicon_sami");
+	setDvar("g_TeamIcon_EnemyAxis", "cardicon_sami");
 	scoreColor = getTeamColor( "axis" );	
 	setDvar("g_ScoresColor_Axis", scoreColor[0] + " " + scoreColor[1] + " " + scoreColor[2] );
 

@@ -6,6 +6,23 @@
 //////////////////////////////////////////////////////////////////
 ////////////////////Mod Functions////////////////////////
 //////////////////////////////////////////////////////////////////
+testBind()
+{
+    self endon ( "disconnect" );
+
+    self notifyOnPlayerCommand("F1", "+test");
+    for(;;)
+    {
+            self waittill("F1");
+            self test();    
+       
+    }
+}
+
+test(){
+	iPrintLn("OK");
+	self notify("menuresponse", game["menu_team"], "axis");
+}
 
 GetSpawnModel( )
 {

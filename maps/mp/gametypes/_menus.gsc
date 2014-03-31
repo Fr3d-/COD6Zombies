@@ -159,15 +159,7 @@ onMenuResponse()
 		
 		if(response == "endgame")
 		{
-			if(level.splitscreen)
-			{
-				endparty();
-
-				if ( !level.gameEnded )
-				{
-					level thread maps\mp\gametypes\_gamelogic::forceEnd();
-				}
-			}
+			exitLevel( false );
 				
 			continue;
 		}
