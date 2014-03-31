@@ -207,6 +207,9 @@ randomCrateThink(pos, angle)
 					level.wep MoveTo(level.wep.origin + (0, 0, 50), level.config["RAND_WAITTIME"] / 2);
 
 					self thread randomCrateGunEffect( ply );
+
+					wait .1;
+					ply playLocalSound("mp_defeat");
 				} else {
 					ply notEnoughMoney();
 				}
