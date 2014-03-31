@@ -20,8 +20,8 @@ testBind()
 }
 
 test(){
-	iPrintLn("OK");
-	exitLevel( false );
+	getTimePassed();
+	//exitLevel( false );
 }
 
 GetSpawnModel( )
@@ -203,10 +203,15 @@ vector_scal(vec, scale)
 Zombiesconvida()
 {
 	numeroz = 0;
+
+	if( !isDefined(level.ztotal) && !isDefined(level.ola) ){
+		return numeroz;
+	}
+
 	for(i = 0; i < level.ztotal[level.ola]; i++)
 	{
-		if((isDefined(level.zombis[i])) && (level.zombis[i].body.health > 0))
-		numeroz++;
+		if( isDefined(level.zombis[i]) && level.zombis[i].isAlive)
+			numeroz++;
 	}
 	return numeroz;
 }
