@@ -532,7 +532,6 @@ Marcadores(player)
 	{
 		player waittill("showHost");
 		player thread maps\mp\mod\_survivors::DestruirTodoelHUD();
-	        	player.scorebartop = self createRectangle("", "", 0, -190, 800, 22, "minimap_scanlines", (0,1,0.6), 1, 1);
 		player.hostname = player createFontString("hudmedium", 1.4);
 		player.hostname setPoint("BOTTOMLEFT", "BOTTOMLEFT", 85, -25);
 		player.hostname setText( level.hostname );
