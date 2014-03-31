@@ -144,7 +144,7 @@ Dinerillo()
 {
 	self endon("disconnect");
 	self endon("death");
-	self.dinero = 10000;
+	self.dinero = level.config["PLAYER_START_MONEY"];
       	self.dineroS = self createFontString( "objective", 2 );
 	self.dineroS setPoint( "", "",320,-190);
       	self thread Destruirhud(self.dineroS);
