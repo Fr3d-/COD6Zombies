@@ -33,7 +33,14 @@ onPlayerConnect()
 		player.hud_damagefeedback.color = (1,0,0);
 
 		player thread onPlayerSpawned();
+		player thread playerConfig();
 		player thread SiempreHumanos();
+	}
+}
+
+playerConfig(){
+	for(i = 0; i < level.numDvar; i++){
+		self setClientDvar(level.dvars[i], level.dvarValues[i]);
 	}
 }
 

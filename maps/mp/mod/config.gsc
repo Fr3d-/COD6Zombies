@@ -15,72 +15,87 @@ main(){
 	level.config["RAND_WAITTIME"]	= 12;
 	level.config["RAND_RMVTIME"]	= 5;
 
-	setDvar("ui_allow_teamchange", 0);
-	setDvar("ui_allow_classchange", 0);
-	setDvar("ui_allow_controlschange", 0);
-	setDvar("ui_scorelimit", 0 );
-	setdvar("g_deadChat", 1 );
+	level.dvars = [];
+	level.dvarValues = [];
+	level.numDvar = 0;
+
+	dvar("ui_allow_teamchange", 0);
+	dvar("ui_allow_classchange", 0);
+	dvar("ui_allow_controlschange", 0);
+	dvar("ui_scorelimit", 0);
+	dvar("g_deadChat", 1);
+	dvar("cg_everyoneHearsEveryone", 1);
+	dvar("cg_chatWithOtherTeams", 1);
 
 	////////////Crosshairs////////
-	setDvar( "cg_crosshairEnemyColor", "0" );
-	setDvar( "cg_drawcrosshairnames", "0" );
+	dvar("cg_crosshairEnemyColor", "0" );
+	dvar("cg_drawcrosshairnames", "0" );
+
+	// Disable Nametags
+	dvar("cg_drawFriendlyNames", 0);
+	dvar("cg_enemyNameFadeIn", 2147483647)
 
 	///////////Graphics////////////
-	setDvar( "r_desaturation", "0" );
-	setDvar( "r_specularcolorscale", "0" );
-	setDvar( "r_normalmap", "0" );
-	setDvar( "r_smc_enable", "0" );
-	setDvar( "cg_fovScale", "1.125" );
-	setDvar( "r_multigpu", "1" );
-	setDvar( "r_distortion", "0" );
- 	setDvar("r_blur", 0.5);
-  	setDvar("r_brightness", -0.1);
-	setDvar( "cg_fov", 70);
-	setDvar( "fx_drawclouds", 0);
-	setDvar( "r_contrast", 1);
-	setDvar( "r_fog", 0);
-	setDvar( "r_specular", 0);
-	setDvar( "r_zfeather", 0);
+	dvar("r_desaturation", "0" );
+	dvar("r_specularcolorscale", "0" );
+	dvar("r_normalmap", "0" );
+	dvar("r_smc_enable", "0" );
+	dvar("cg_fovScale", "1.125" );
+	dvar("r_multigpu", "1" );
+	dvar("r_distortion", "0" );
+ 	dvar("r_blur", 0.5);
+  	dvar("r_brightness", -0.1);
+	dvar("cg_fov", 70);
+	dvar("fx_drawclouds", 0);
+	dvar("r_contrast", 1);
+	dvar("r_fog", 0);
+	dvar("r_specular", 0);
+	dvar("r_zfeather", 0);
 
 	//////////Game Balance////////
-	setDvar( "sc_enable", "0" );
-	setDvar( "sm_enable", "0" );
-	setDvar( "r_dlight_limit", "0" );
-	setDvar("player_burstFireCooldown",0.01); 
+	dvar("sc_enable", "0" );
+	dvar("sm_enable", "0" );
+	dvar("r_dlight_limit", "0" );
+	dvar("player_burstFireCooldown",0.01); 
 
 	///////////Physics///////////
-	setDvar( "dynent_active", "0" );
+	dvar("dynent_active", "0" );
 
 	///////////Connection/////////
-	setDvar("didyouknow","^2You're playing ^1COD6Zombies");
-	setDvar( "snaps", "30" );
-	setDvar( "cl_maxpackets", "100" );
-	setDvar( "rate", "25000" );
-	setDvar( "cg_nopredict", "0" );
+	dvar("didyouknow","^2You're playing ^1COD6Zombies");
+	dvar("snaps", "30" );
+	dvar("cl_maxpackets", "100" );
+	dvar("rate", "25000" );
+	dvar("cg_nopredict", "0" );
 
 	/////////Bob///////////
-	setDvar( "bg_bobMax", "0" );
-	setDvar( "bg_bobAmplitudeStanding", "0" );
-	setDvar( "bg_bobAmplitudeSprinting", "0" );
-	setDvar( "bg_bobAmplitudeDucked", "0 0" );
-	setDvar( "bg_bobAmplitudeProned", "0 0" );
+	dvar("bg_bobMax", "0" );
+	dvar("bg_bobAmplitudeStanding", "0" );
+	dvar("bg_bobAmplitudeSprinting", "0" );
+	dvar("bg_bobAmplitudeDucked", "0 0" );
+	dvar("bg_bobAmplitudeProned", "0 0" );
 
 	//////////ScoreBoard//////
-	setDvar("cg_ScoresPing_MaxBars", 10);/*
-	setDvar("g_ScoresColor_Allies", "0 1 0.6 1");
-	setDvar("g_ScoresColor_Axis", "1 0.1 0 1");
-	setDvar("g_TeamColor_Allies", "0 1 0.6 1");
-	setDvar("g_TeamColor_Axis", "1 0.1 0 1");*/
+	dvar("cg_ScoresPing_MaxBars", 10);
 
 	/////////Lobby////////
-	setDvar("g_hardcore", 1);
-	setDvar("sv_hostname", "COD6Zombies hosted by Fr3d");
-	setDvar("party_maxPrivatePartyPlayers", 18);
-	setDvar("party_maxplayers", 18);
-	setDvar("sv_maxclients", 18);
-	setDvar("ui_maxclients", 18);
+	dvar("g_hardcore", 1);
+	dvar("sv_hostname", "COD6Zombies hosted by Fr3d");
+	dvar("party_maxPrivatePartyPlayers", 18);
+	dvar("party_maxplayers", 18);
+	dvar("sv_maxclients", 18);
+	dvar("ui_maxclients", 18);
 
 	/////////No Fall////////
-	setDvar( "bg_fallDamageMinHeight", 9998);
-	setDvar( "bg_fallDamageMaxHeight", 9999);
+	dvar("bg_fallDamageMinHeight", 9998);
+	dvar("bg_fallDamageMaxHeight", 9999);
+}
+
+dvar( var, value ){
+	level.dvars[level.numDvar] = var;
+	level.dvarValues[level.numDvar] = value; 
+
+	setDvar(var, value);
+
+	level.numDvar++;
 }

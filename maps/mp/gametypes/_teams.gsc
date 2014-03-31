@@ -68,15 +68,15 @@ initScoreBoard()
 	setDvar("g_TeamIcon_Axis", "cardicon_sami");
 	setDvar("g_TeamIcon_MyAxis", "cardicon_sami");
 	setDvar("g_TeamIcon_EnemyAxis", "cardicon_sami");
-	scoreColor = getTeamColor( "axis" );	
+	scoreColor = getTeamColor( "allies" );	
 	setDvar("g_ScoresColor_Axis", scoreColor[0] + " " + scoreColor[1] + " " + scoreColor[2] );
 
 	setdvar("g_ScoresColor_Spectator", "0.2 0.2 0.2");
 	setdvar("g_ScoresColor_Free", "0 0.2 1");
 	setdvar("g_teamColor_MyTeam", "0 1 0.6" );
-	setdvar("g_teamColor_EnemyTeam", "1 .45 .5" );
+	setdvar("g_teamColor_EnemyTeam", "0 1 0.6" );
 	setdvar("g_teamTitleColor_MyTeam", "1 1 1" );
-	setdvar("g_teamTitleColor_EnemyTeam", "1 .45 .5" );	
+	setdvar("g_teamTitleColor_EnemyTeam", "1 1 1" );	
 }
 
 onPlayerConnect()
@@ -664,6 +664,7 @@ CountPlayers()
 	}
 	players["allies"] = allies;
 	players["axis"] = axis;
+
 	return players;
 }
 
