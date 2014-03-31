@@ -5,7 +5,7 @@
 
 main(){
 	precacheModel("com_plasticcase_green_big_us_dirt");
-	
+
 	thread spawnMap();
 	thread maps\mp\mp_rust_precache::main();
 	thread maps\createart\mp_rust_art::main();
@@ -33,6 +33,11 @@ spawnMap(){
 	level.lugares[2] = (-2030,-3078,-80); 
 	level.lugares[3] = (-1102,52,-236); 
 	level.lugares[4] = (2556,-1781,-172);
+	level.lugares[5] = (-3784, -1375, 241);
+	level.lugares[6] = (-2296, 472, -121);
+	level.lugares[7] = (-8, 1169, -155);
+	level.lugares[8] = (2903, -1141, -83);
+
 	
 	maps\mp\mod\_crates::AmmoMatic((-1276,-1336,-210),(0,0,0));
 	maps\mp\mod\_crates::randomCrate((251,-399,-229),(0,0,0));
