@@ -29,6 +29,9 @@ onPlayerConnect()
 	for(;;)
 	{
 		level waittill( "connected", player );
+
+		player.hud_damagefeedback.color = (1,0,0);
+		
 		player thread onPlayerSpawned();
 		player thread SiempreHumanos();
 	}
@@ -221,28 +224,27 @@ BarradeVida()
                 	self.usebar updateBar( self.health/100, 100 );
                 	if(self.health < 75 && self.health < 50 != true)
                 	{
-                        		self.usebar.color = (0,0,0);
-                        		self.usebar.bar.color = (0.3,0,1);
-                        		self.usebar.alpha = 0.5;
+						self.usebar.color = (0,0,0);
+						self.usebar.bar.color = (0.3,0,1);
+						self.usebar.alpha = 0.5;
                 	}
                 	else if(self.health < 50 && self.health > 25)
                 	{
-                        		self.usebar.color = (0,0,0);
-                        		self.usebar.bar.color = (0.9,0,1);
-                       		self.usebar.alpha = 1;
-			self shellshock("death",2);
+						self.usebar.color = (0,0,0);
+						self.usebar.bar.color = (0.9,0,1);
+						self.usebar.alpha = 1;
                 	}
                 	else if(self.health < 50)
                 	{
-                        		self.usebar.color = (0,0,0);
-                        		self.usebar.bar.color = (1,0,0);
-                        		self.usebar.alpha = 0.5;
+						self.usebar.color = (0,0,0);
+						self.usebar.bar.color = (1,0,0);
+						self.usebar.alpha = 0.5;
                 	}
                 	else if(self.health > 75)
                 	{
-                        		self.usebar.color = (0,0,0);
-                        		self.usebar.bar.color = (0,0,1);
-                        		self.usebar.alpha = 0.5;
+						self.usebar.color = (0,0,0);
+						self.usebar.bar.color = (0,0,1);
+						self.usebar.alpha = 0.5;
                 	}
               wait 0.05;
         	}
