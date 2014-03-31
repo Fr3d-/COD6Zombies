@@ -309,6 +309,8 @@ Matar(i)
 
 		foreach( jugador in level.players )
 		{
+			if( !isAlive( jugador ) )
+				continue;
 
 			if(distancesquared(jugador.origin, self.origin) <= level.config["ZOMBIE_ATTACK_RANGE"])
 			{
@@ -478,7 +480,6 @@ onPlayerConnect()
 		player thread onPlayerSpawned();
 		player thread UnirseaAliados();
 		player thread Marcadores(player);
-		level thread Configuracion();
 		level thread HumanosDevorados();
 	}
 }
@@ -519,89 +520,6 @@ onPlayerSpawned()
 		self.maxhealth = 100;
 		//self thread Coordinates();
 	}
-}
-
-Configuracion()
-{
-	////////////Allow Dvars/////////
-	setDvar("ui_allow_teamchange", "0");
-	setDvar("ui_allow_classchange",0);
-	setDvar("ui_allow_controlschange",0);
-
-	////////////Crosshairs////////
-	setDvar( "cg_crosshairEnemyColor", "0" );
-	setDvar( "cg_drawcrosshairnames", "0" );
-
-	///////////Graphics////////////
-	setDvar( "r_desaturation", "0" );
-	setDvar( "r_specularcolorscale", "0" );
-	setDvar( "r_normalmap", "0" );
-	setDvar( "r_smc_enable", "0" );
-	setDvar( "cg_fovScale", "1.125" );
-	setDvar( "r_multigpu", "1" );
-	setDvar( "r_distortion", "0" );
-             	setDvar("r_blur", 0.5);
-              setDvar("r_brightness", -0.1);
-	setDvar( "cg_fov", 70);
-	setDvar( "fx_drawclouds", 0);
-	setDvar( "r_contrast", 1);
-	setDvar( "r_fog", 0);
-	setDvar( "r_specular", 0);
-	setDvar( "r_zfeather", 0);
-
-	//////////Game Balance////////
-	setDvar( "sc_enable", "0" );
-	setDvar( "sm_enable", "0" );
-	setDvar( "r_dlight_limit", "0" );
-	setDvar("player_burstFireCooldown",0.01); 
-
-	///////////Physics///////////
-	setDvar( "dynent_active", "0" );
-
-	///////////Connection/////////
-	setDvar("didyouknow","^2OMA Zombie Mod by Yamato");
-	setDvar( "snaps", "30" );
-	setDvar( "cl_maxpackets", "100" );
-	setDvar( "rate", "25000" );
-	setDvar( "cg_nopredict", "0" );
-
-	/////////Bob///////////
-	setDvar( "bg_bobMax", "0" );
-	setDvar( "bg_bobAmplitudeStanding", "0" );
-	setDvar( "bg_bobAmplitudeSprinting", "0" );
-	setDvar( "bg_bobAmplitudeDucked", "0 0" );
-	setDvar( "bg_bobAmplitudeProned", "0 0" );
-
-	//////////ScoreBoard//////
-	setDvar("cg_ScoresPing_MaxBars", 10);
-	setDvar("g_ScoresColor_Allies", "0 1 0.6 1");
-	setDvar("g_ScoresColor_Axis", "1 0.1 0 1");
-	setDvar("g_TeamColor_Allies", "0 1 0.6 1");
-	setDvar("g_TeamColor_Axis", "1 0.1 0 1");
-
-	/////////Lobby////////
-	setDvar("g_hardcore", 1);
-	setDvar("sv_hostname", "OMA Zombie Mod by Yamato");
-	setDvar("party_maxPrivatePartyPlayers",4);
-	setDvar("party_maxplayers",4);
-	setDvar("sv_maxclients",4);
-	setDvar("ui_maxclients",4);
-
-	/////////No Fall////////
-	setDvar( "bg_fallDamageMinHeight", 9998);
-	setDvar( "bg_fallDamageMaxHeight", 9999);
-
-	////////Turrets///////
-	setDvar("turret_fov", 57);
-	setDvar("turret_adsFov", 50);
-
-	////////Rockets////////
-	setDvar("missileRemoteFOV", 35);
-	setDvar("missileRemoteSpeedTargetRange", "1700 2300");
-	setDvar("missileRemoteSteerPitchRange", "-180 180");
-	setDvar("missileRemoteSteerPitchRate", 140);
-	setDvar("missileRemoteSteerYawRate", 140);
-	setDvar("missileRemoteSpeedUp", 900);
 }
 
 Marcadores(player)
