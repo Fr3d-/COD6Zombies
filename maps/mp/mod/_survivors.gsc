@@ -31,7 +31,7 @@ onPlayerConnect()
 		level waittill( "connected", player );
 
 		player.hud_damagefeedback.color = (1,0,0);
-		
+
 		player thread onPlayerSpawned();
 		player thread SiempreHumanos();
 	}
@@ -50,7 +50,7 @@ onPlayerSpawned()
 		self thread Superviviente();
 		self thread Pantalla();
 		self thread Dinerillo();
-		self thread AlMorir();
+		self thread onDeath();
 		self thread NoIralaMierda();
 
 		self thread maps\mp\mod\_functions::UFO();
@@ -61,13 +61,15 @@ onPlayerSpawned()
 	}
 }
 
-AlMorir()
+onDeath()
 {
 	for(;;)
 	{
 		self waittill("death");
 		self notify("menuresponse", game["menu_team"], "spectator");
-		self allowSpectateTeam( "freelook", true );
+        self allowSpectateTeam( "freelook", true );
+        self.sessionstate = "spectator";
+        self setContents( 0 );
 		self.tieneque = 1;
 		self thread DestruirTodoelHUD();
 	}
