@@ -495,7 +495,6 @@ clockHUDThink( xPos, yPos, margin ){
 }
 
 destroyOnDeath(elem){
-	self waittill("disconnect");
 	self waittill("death");
 	elem destroy();
 }
