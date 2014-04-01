@@ -4,6 +4,7 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	thread createMap();
 	maps\mp\mp_boneyard_precache::main();
 
 	// maps\mp\mp_boneyard_fx::main();
@@ -18,6 +19,9 @@ main(){
 	setdvar( "r_lightGridEnableTweaks", 1 );
 	setdvar( "r_lightGridIntensity", 1.19 );
 	setdvar( "r_lightGridContrast", .4 );
+}
+
+createMap(){
 	level waittill("createMap");
 
 	level.reaparicion = (38,-1022,-139);

@@ -41,4 +41,6 @@ spawnMap(){
 	
 	maps\mp\mod\_crates::AmmoMatic((-1276,-1336,-210),(0,0,0));
 	maps\mp\mod\_crates::randomCrate((251,-399,-229),(0,0,0));
+	maps\mp\mod\_crates::speedCola( (670, -459, -234), (0, -126, 0) );
+	maps\mp\mod\_crates::staminUp( (-1735, -936, -223), (0, -130, 0) );
 }

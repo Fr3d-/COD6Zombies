@@ -266,7 +266,6 @@ moneyHUD(){
 	self endon("disconnect");
 	self endon("death");
 
-	self.money = level.config["PLAYER_START_MONEY"];
 	self.oldMoney = self.money;
 
 	xPos = -55;
@@ -494,7 +493,58 @@ clockHUDThink( xPos, yPos, margin ){
 	}
 }
 
+speedColaHUD(){
+	self endon("disconnect");
+	self endon("death");
+
+	xPos = level.config["HUD_PERK_X"];
+	yPos = level.config["HUD_PERK_Y"];
+
+	self.HUDspeedCola = newClientHudElem( self );
+	self.HUDspeedCola.alignX = "noscale";
+	self.HUDspeedCola.alignY = "noscale";
+	self.HUDspeedCola.horzAlign = "right";
+	self.HUDspeedCola.vertAlign = "middle";
+	self.HUDspeedCola.x = xPos;
+	self.HUDspeedCola.y = yPos;
+	self.HUDspeedCola.foreground = true;
+	self.HUDspeedCola.alpha = 1;
+	self.HUDspeedCola.hideWhenInMenu = true;
+	self.HUDspeedCola setShader( level.config["SPEED_ICON"], 32, 32 );
+	self.HUDspeedCola.shader = level.config["SPEED_ICON"];
+	self.HUDspeedCola.color = ( 1, 1, 1 );
+
+	self thread destroyOnDeath(self.HUDspeedCola);
+}
+
+staminUpHUD(){
+	self endon("disconnect");
+	self endon("death");
+
+	xPos = level.config["HUD_PERK_X"];
+	yPos = level.config["HUD_PERK_Y"];
+
+	perkNum = 1;
+
+	self.HUDstaminUp = newClientHudElem( self );
+	self.HUDstaminUp.alignX = "noscale";
+	self.HUDstaminUp.alignY = "noscale";
+	self.HUDstaminUp.horzAlign = "right";
+	self.HUDstaminUp.vertAlign = "middle";
+	self.HUDstaminUp.x = xPos;
+	self.HUDstaminUp.y = yPos + ( ( 32 * perkNum ) + ( level.config["HUD_PERK_MARGIN"] * perkNum ) + level.config["HUD_PERK_MARGIN"]);
+	self.HUDstaminUp.foreground = true;
+	self.HUDstaminUp.alpha = 1;
+	self.HUDstaminUp.hideWhenInMenu = true;
+	self.HUDstaminUp setShader( level.config["STAMIN_ICON"], 32, 32 );
+	self.HUDstaminUp.shader = level.config["STAMIN_ICON"];
+	self.HUDstaminUp.color = ( 1, 1, 1 );
+
+	self thread destroyOnDeath(self.HUDstaminUp);
+}
+
 destroyOnDeath(elem){
 	self waittill("death");
 	elem destroy();
+	iPrintLn("noooo");
 }

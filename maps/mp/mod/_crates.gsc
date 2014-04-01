@@ -34,38 +34,40 @@ AmmoMatic(pos, angle)
 	block.headIcon setShader( level.config["AMMO_ICON"], 10, 10);
 	block.headIcon setWaypoint( true, true, false );
 
-	block thread ammoThink(pos);
+	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 100, level.config["CRATE_DISTANCE"] + 100);
+	trigger.angles = angle;
+	trigger thread ammoThink(pos);
 	wait 0.01;
 }
 
 ammoThink(pos) 
 { 
+	self endon("disconnect"); 
+
 	while(1) 
 	{ 
-		foreach( ply in level.players ){
-			if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown && ply.isAlive )
-			{
-		  		ply setLowerMessage("ammoActivate", "^7[^1" + level.config["AMMO_NAME"] + "^7][^3" + level.config["AMMO_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for an ammo refill");
+		self waittill("trigger", ply);
 
-		  		if( ply useButtonPressed() ){
-		  			if( ply.money >= level.config["AMMO_PRICE"] ){
+		if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown )
+		{
+	  		ply setLowerMessage("activate", "^7[^1" + level.config["AMMO_NAME"] + "^7][^3" + level.config["AMMO_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for an ammo refill");
 
-						ply ClearLowerMessage("ammoActivate", 1);
-						ply.money -= level.config["AMMO_PRICE"];
-						ply maps\mp\killstreaks\_airdrop::refillAmmo();  
-						ply playLocalSound( "ammo_crate_use" );
-						ply thread Millonario();
-					} else {
-						ply notEnoughMoney();
-					}
+	  		if( ply useButtonPressed() ){
+	  			if( ply.money >= level.config["AMMO_PRICE"] ){
 
-					ply thread cooldown();
-		  		}
-			} else {
-				ply ClearLowerMessage("ammoActivate", 1);
-			}
+					ply ClearLowerMessage("activate", 1);
+					ply.money -= level.config["AMMO_PRICE"];
+					ply maps\mp\killstreaks\_airdrop::refillAmmo();  
+					ply playLocalSound( "ammo_crate_use" );
+					ply thread Millonario();
+				} else {
+					ply notEnoughMoney();
+				}
 
-			wait 0.01;
+				ply thread cooldown();
+	  		}
+		} else {
+			ply ClearLowerMessage("activate", 1);
 		}
 
 		wait .1;
@@ -171,50 +173,192 @@ randomCrate(pos, angle)
 	block.headIcon setShader( level.config["RAND_ICON"], 10, 10);
 	block.headIcon setWaypoint( true, true, false );
 
-	block randomCrateThink(pos, angle);
+	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 10, level.config["CRATE_DISTANCE"] + 10);
+	trigger.angles = angle;
+	trigger thread randomCrateThink(pos, angle);
+	wait 0.01;
 }
 
 randomCrateThink(pos, angle) 
 { 
-	while(1)
+	self endon("disconnect");
+
+	while(1) 
 	{ 
-		foreach( ply in level.players ){
-			if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown && !level.randomCrateInUse && ply.isAlive )
-			{
-		  		ply setLowerMessage("randomActivate", "^7[^1" + level.config["RAND_NAME"] + "^7][^3" + level.config["RAND_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
+		self waittill("trigger", ply);
 
-		  		if( ply useButtonPressed() ){
-		  			if( ply.money >= level.config["RAND_PRICE"] ){
+		if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown && !level.randomCrateInUse )
+		{
+	  		ply setLowerMessage("activate", "^7[^1" + level.config["RAND_NAME"] + "^7][^3" + level.config["RAND_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a random weapon");
 
-						ply ClearLowerMessage("randomActivate", 1);
-						ply.money -= level.config["RAND_PRICE"];
-						ply thread Millonario();
-						ply playLocalSound("ui_mp_timer_countdown");
-						ply thread randomCrateGiveWeapon(pos);
+	  		if( ply useButtonPressed() ){
+	  			if( ply.money >= level.config["RAND_PRICE"] ){
 
-						level.randomCrateInUse = true;
+					ply ClearLowerMessage("activate", 1);
+					ply.money -= level.config["RAND_PRICE"];
+					ply thread Millonario();
+					ply playLocalSound("ui_mp_timer_countdown");
+					ply thread randomCrateGiveWeapon(pos);
 
-						level.wep = spawn("script_model", pos + (0, 5, 0) );
-						level.wep.angles = angle;
-						level.wep MoveTo(level.wep.origin + (0, 0, 50), level.config["RAND_WAITTIME"] / 2);
+					level.randomCrateInUse = true;
 
-						self thread randomCrateGunEffect( ply );
+					level.wep = spawn("script_model", pos + (0, 5, 0) );
+					level.wep.angles = angle;
+					level.wep MoveTo(level.wep.origin + (0, 0, 50), level.config["RAND_WAITTIME"] / 2);
 
-						wait .1;
-						ply playLocalSound("mp_defeat");
-					} else {
-						ply notEnoughMoney();
-					}
+					self thread randomCrateGunEffect( ply );
 
-					ply thread cooldown();
-		  		}
-			} else {
-				ply ClearLowerMessage("randomActivate", 1);
-			}
+					wait .1;
+					ply playLocalSound("mp_defeat");
+				} else {
+					ply notEnoughMoney();
+				}
 
-			wait 0.01;
+				ply thread cooldown();
+	  		}
+		} else {
+			ply ClearLowerMessage("activate", 1);
 		}
 
 		wait .1;
 	}
-}  
+}
+
+speedCola(pos, angle)
+{
+	block = spawn("script_model", pos );
+	block setModel("com_plasticcase_beige_big");
+	block.angles = angle;
+	block Solid();
+	block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+
+	invisblock = spawn("script_model", pos+(0,0,60));
+	invisblock Solid();
+	invisblock.angles = angle;
+	invisblock CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+
+	block.headIcon = newHudElem();
+	block.headIcon.x = block.origin[0];
+	block.headIcon.y = block.origin[1];
+	block.headIcon.z = block.origin[2] + 50;
+	block.headIcon.alpha = 0.85;
+	block.headIcon setShader( level.config["SPEED_ICON"], 10, 10);
+	block.headIcon setWaypoint( true, true, false );
+
+	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 100, level.config["CRATE_DISTANCE"] + 100);
+	trigger.angles = angle;
+	trigger thread speedColaThink(pos);
+	wait 0.01;
+}
+
+speedColaThink(pos) 
+{ 
+	self endon("disconnect"); 
+
+	while(1) 
+	{ 
+		self waittill("trigger", ply);
+
+		if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown )
+		{
+			if( ply.speed == 0 )
+	  			ply setLowerMessage("activate", "^7[^1" + level.config["SPEED_NAME"] + "^7][^3" + level.config["SPEED_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a bottle of SpeedCola");
+	  		else
+	  			ply setLowerMessage("activate", "^7[^1" + level.config["SPEED_NAME"] + "^7][^3" + level.config["SPEED_PRICE"] + "^7]\n" + "You've already taken a SpeedCola");
+
+	  		if( ply useButtonPressed() && ply.speed == 0){
+	  			if( ply.money >= level.config["SPEED_PRICE"] ){
+
+					ply ClearLowerMessage("activate", 1);
+					ply.money -= level.config["SPEED_PRICE"];
+					ply _setperk("specialty_fastreload"); 
+					ply playLocalSound( "mp_level_up" );
+
+					ply thread maps\mp\mod\_HUD::speedColaHUD();
+
+					ply.speed = 1;
+
+					ply thread Millonario();
+				} else {
+					ply notEnoughMoney();
+				}
+
+				ply thread cooldown();
+	  		}
+		} else {
+			ply ClearLowerMessage("activate", 1);
+		}
+
+		wait .1;
+	}
+}
+
+staminUp(pos, angle)
+{
+	block = spawn("script_model", pos );
+	block setModel("com_plasticcase_beige_big");
+	block.angles = angle;
+	block Solid();
+	block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+
+	invisblock = spawn("script_model", pos+(0,0,60));
+	invisblock Solid();
+	invisblock.angles = angle;
+	invisblock CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+
+	block.headIcon = newHudElem();
+	block.headIcon.x = block.origin[0];
+	block.headIcon.y = block.origin[1];
+	block.headIcon.z = block.origin[2] + 50;
+	block.headIcon.alpha = 0.85;
+	block.headIcon setShader( level.config["STAMIN_ICON"], 10, 10);
+	block.headIcon setWaypoint( true, true, false );
+
+	trigger = spawn("trigger_radius", pos, 0, level.config["CRATE_DISTANCE"] + 100, level.config["CRATE_DISTANCE"] + 100);
+	trigger.angles = angle;
+	trigger thread staminUpThink(pos);
+	wait 0.01;
+}
+
+staminUpThink(pos) 
+{ 
+	self endon("disconnect"); 
+
+	while(1) 
+	{ 
+		self waittill("trigger", ply);
+
+		if( Distance(pos, ply.origin) <= level.config["CRATE_DISTANCE"] && !ply.onCooldown )
+		{
+			if( ply.stamin == 0 )
+	  			ply setLowerMessage("activate", "^7[^1" + level.config["STAMIN_NAME"] + "^7][^3" + level.config["STAMIN_PRICE"] + "^7]\n" + "Hold ^3[{+activate}]^7 for a bottle of staminUp");
+	  		else
+	  			ply setLowerMessage("activate", "^7[^1" + level.config["STAMIN_NAME"] + "^7][^3" + level.config["STAMIN_PRICE"] + "^7]\n" + "You've already taken a staminUp");
+
+	  		if( ply useButtonPressed() && ply.stamin == 0){
+	  			if( ply.money >= level.config["STAMIN_PRICE"] ){
+
+					ply ClearLowerMessage("activate", 1);
+					ply.money -= level.config["STAMIN_PRICE"];
+					ply maps\mp\perks\_perks::givePerk("specialty_marathon");
+					ply maps\mp\perks\_perks::givePerk("specialty_lightweight");
+					ply playLocalSound( "mp_level_up" );
+
+					ply thread maps\mp\mod\_HUD::staminUpHUD();
+
+					ply.stamin = 1;
+
+					ply thread Millonario();
+				} else {
+					ply notEnoughMoney();
+				}
+
+				ply thread cooldown();
+	  		}
+		} else {
+			ply ClearLowerMessage("activate", 1);
+		}
+
+		wait .1;
+	}
+}

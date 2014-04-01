@@ -9,17 +9,24 @@ main(){
 	precacheMpAnim("pb_walk_forward_akimbo");
 	precacheMpAnim("pt_stand_pullout_shield");
 
-	precacheShader("specialty_fastreload_upgrade");
-	precacheShader("cardicon_juggernaut_2");
-	precacheShader("hudicon_neutral");
-	precacheShader("cardicon_fmj");
+	// General HUD
+	precacheShader("black");
 	precacheShader("cardtitle_hazard_3");
 	precacheShader("cardicon_compass");
 	precacheShader("cardicon_biohazard");
+
+	// Ammo
+	precacheShader("cardicon_bullets_50cal");
+
+	// Perks
+	precacheShader("specialty_marathon_upgrade");
+	precacheShader("specialty_fastreload_upgrade");
+	precacheShader("cardicon_juggernaut_2");
+
+	precacheShader("hudicon_neutral");
+	precacheShader("cardicon_fmj");
 	precacheShader("ui_cursor");
 
-	precacheShader("cardicon_bullets_50cal");
-	precacheShader("black");
 
 	level.bloodfx = loadfx("impacts/flesh_hit_body_fatal_exit");
  	level.molotovfx = loadfx ("explosions/helicopter_explosion_secondary_small");

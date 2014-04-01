@@ -36,7 +36,7 @@ Oleadas()
 	switch(level.ola)
 	{
 		case 1:
-			level.ztotal[level.ola] = 10;
+			level.ztotal[level.ola] = 1;
 			level thread createZombies(level.ztotal[level.ola],100);
 		break;
 
@@ -174,10 +174,9 @@ findAndMoveToPlayer(i)
 			self.angles = (0, movetoLoc[1], 0);
 			delante = self.origin + (0, 0, 25) + maps\mp\mod\_functions::vector_scal(anglestoforward(self.angles), 25);
 			final = bullettrace(delante, delante + (0, 0, -200), false, self);
-			print( final["position"] );
 
 			if( distancesquared(self.origin, pTarget.origin) > level.config["ZOMBIE_ATTACK_RANGE"] )
-				self moveto(final["position"],self.velocidad);
+				self moveto(final["position"], distance(self getOrigin(), final["position"]) / 126 ); // 180 * 0.7 (backwards speedscaler)
 		}
 		wait .08;
 	}
@@ -189,47 +188,38 @@ Velocidades(i)
 	switch( randomInt(9) )
 	{
 		case 0:
-		self.velocidad = 0.5;
 		self.sonido = "generic_death_russian_1";
 		self.defAnim = "pb_stumble_walk_forward";
 		break;
 		case 1:
-		self.velocidad = 0.4;
 		self.sonido = "melee_knife_hit_watermelon";
 		self.defAnim = "pb_sprint_shield"; 
 		break;
 		case 2:
-		self.velocidad = 0.3;
 		self.sonido = "melee_knife_hit_watermelon";
 		self.defAnim = "pb_hold_run"; 
 		break;
 		case 3:
-		self.velocidad = 0.2;
 		self.sonido = "generic_death_russian_2";
 		self.defAnim = "pb_sprint_pistol"; 
 		break;
 		case 4:
-		self.velocidad = 0.15;
 		self.sonido = "generic_death_russian_1";
 		self.defAnim = "pb_sprint_akimbo";
 		break;
 		case 5:
-		self.velocidad = 0.25;
 		self.sonido = "generic_death_russian_2";
 		self.defAnim = "pb_sprint_pistol"; 
 		break;
 		case 6:
-		self.velocidad = 0.35;
 		self.sonido = "melee_knife_hit_watermelon";
 		self.defAnim = "pb_hold_run"; 
 		break;
 		case 7:
-		self.velocidad = 0.27;
 		self.sonido = "melee_knife_hit_watermelon";
 		self.defAnim = "pb_sprint";
 		break;
 		case 8:
-		self.velocidad = 0.45;
 		self.sonido = "generic_death_russian_1";
 		self.defAnim = "pb_walk_forward_akimbo";
 		break;

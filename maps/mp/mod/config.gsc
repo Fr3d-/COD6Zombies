@@ -7,22 +7,41 @@ main(){
 	level.config["CRATE_DISTANCE"] 		= 100;
 	level.config["CRATE_COOLDOWN_TIME"] = 1;
 
+	level.config["HUD_PERK_MARGIN"] = 5;
+	level.config["HUD_PERK_X"] = 0;
+	level.config["HUD_PERK_Y"] = -30;
+
 	level.config["AMMO_NAME"]		= "AmmoMatic";
 	level.config["AMMO_PRICE"]		= 700;
 	level.config["AMMO_ICON"]		= "waypoint_ammo_friendly";
 
 	level.config["RAND_NAME"]		= "    ?    ";
-	level.config["RAND_PRICE"]		= 1000;
+	level.config["RAND_PRICE"]		= 2500;
 	level.config["RAND_ICON"]		= "hudicon_neutral";
 	level.config["RAND_WAITTIME"]	= 12;
 	level.config["RAND_RMVTIME"]	= 5;
+
+	level.config["SPEED_NAME"]		= "SpeedCola";
+	level.config["SPEED_PRICE"]		= 2000;
+	level.config["SPEED_ICON"]		= "specialty_fastreload_upgrade";
+
+	level.config["STAMIN_NAME"]		= "StaminUp";
+	level.config["STAMIN_PRICE"]	= 3000;
+	level.config["STAMIN_ICON"]		= "specialty_marathon_upgrade";
 
 	level.dvars = [];
 	level.dvarValues = [];
 	level.numDvar = 0;
 
+	// Ban
 	dvar("sv_kickbantime", 400);
 
+	// Host migration
+	dvar("party_hostmigration", 0);
+	dvar("party_connecttimeout", 1);
+	dvar("badhost_endGameIfISuck", 0);
+
+	// Team
 	dvar("ui_allow_teamchange", 0);
 	dvar("ui_allow_classchange", 0);
 	dvar("ui_allow_controlschange", 0);

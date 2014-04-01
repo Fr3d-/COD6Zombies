@@ -15,11 +15,7 @@ main()
 	PrecacheShellShock( "death" );
 	PrecacheShellShock( "damage_mp" );
 	PrecacheShellShock( "pain" );
-	self.speed = 0;
-	self.jugger = 0;
-	self.beer = 0;
-	self.daiquiri = 0;
-	self.stamin = 0;
+
 	self thread maps\mp\mod\magicweapons\_raygun::inicio();
 	self thread maps\mp\mod\magicweapons\_flamethrower::init();
 }
@@ -59,6 +55,13 @@ onPlayerSpawned()
 		self thread NoIralaMierda();
 
 		self.isAlive = true;
+		self.money = level.config["PLAYER_START_MONEY"];
+
+		self.speed = 0;
+		self.jugger = 0;
+		self.beer = 0;
+		self.daiquiri = 0;
+		self.stamin = 0;
 
 		self thread maps\mp\mod\_HUD::setupHUD();
 		
