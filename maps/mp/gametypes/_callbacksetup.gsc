@@ -129,7 +129,7 @@ Called once when a host migration has occured.
 ================*/
 CodeCallback_HostMigration()
 {
-	[[level.callbackHostMigration]]();
+	//[[level.callbackHostMigration]]();
 }
 
 
