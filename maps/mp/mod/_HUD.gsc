@@ -546,5 +546,4 @@ staminUpHUD(){
 destroyOnDeath(elem){
 	self waittill("death");
 	elem destroy();
-	iPrintLn("noooo");
 }
