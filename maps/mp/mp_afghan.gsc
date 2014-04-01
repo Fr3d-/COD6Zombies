@@ -50,8 +50,7 @@ createMap(){
 			//CreateMinigun((-2617,10639,-1682),"pavelow_minigun_mp",(0,-151,0)); 
 			CreateBlock((-2617,10639,-1720),(0,-241,0));
 			maps\mp\mod\_crates::AmmoMatic((-1882,10951,-1799),(5,30,0));
-			//SpeedCola((-1658,11052,-1826),(2,30,0));
-
+			maps\mp\mod\_crates::speedCola((-1658,11052,-1826),(2,30,0));
 			maps\mp\mod\_crates::randomCrate((-1224,11249,-1888),(10,20,0));
 		break;
 
