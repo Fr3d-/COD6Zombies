@@ -161,8 +161,8 @@ findAndMoveToPlayer(i)
                 			continue;
 			if(level.teamBased && self.team == player.pers["team"])
                 			continue;
-			if( !bulletTracePassed( self getTagOrigin( "j_head" ), player getTagOrigin( "j_head" ), false, self ) )
-                			continue;
+			//if( !bulletTracePassed( self getTagOrigin( "j_head" ), player getTagOrigin( "j_head" ), false, self ) )
+            //    			continue;
 			if(player.sessionstate != "playing")
 				continue;
 			if(distancesquared(self.origin, player.origin) < TmpDist || !isDefined(TmpDist) )
@@ -257,7 +257,7 @@ VidadeZombies(i)
 			attacker.score += 100;
 			attacker.pers["score"] = attacker.score;
 
-			wait 5;
+			wait 1;
 			self delete();
 			break;
 		}
