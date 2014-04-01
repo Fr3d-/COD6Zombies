@@ -21,6 +21,8 @@ main(){
 	level.dvarValues = [];
 	level.numDvar = 0;
 
+	dvar("sv_kickbantime", 400);
+
 	dvar("ui_allow_teamchange", 0);
 	dvar("ui_allow_classchange", 0);
 	dvar("ui_allow_controlschange", 0);
