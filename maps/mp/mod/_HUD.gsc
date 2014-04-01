@@ -4,14 +4,20 @@
 #include maps\mp\mod\_functions;
 
 setupHUD(){
-	if( !isDefined(self.hud) )
-		self.hud = [];
+	self endon("disconnect");
+	self endon("death");
 
 	self thread waveHUD();
 	self thread ammoHUD();
 	self thread moneyHUD();
-	self thread scoreHUD();
+
+	if( !isDefined(self.hud) )
+		self thread scoreHUD();
+
 	self thread clockHUD();
+
+	if( !isDefined(self.hud) )
+		self.hud = true;
 }
 
 waveHUD(){
@@ -90,6 +96,7 @@ waveHUD(){
 }
 
 waveHUDThink(){
+	self endon("disconnect");
 	self endon("death");
 
 	for( ;; ){
@@ -109,6 +116,9 @@ waveHUDThink(){
 }
 
 ammoHUD(){
+	self endon("disconnect");
+	self endon("death");
+
 	xPos = -60;
 	yPos = 0;
 
@@ -223,6 +233,9 @@ ammoHUD(){
 }
 
 ammoHUDThink( xPos, yPos, margin ){
+	self endon("disconnect");
+	self endon("death");
+
 	for( ;; ){
 		if( self.ammoClip != self getWeaponAmmoClip( self.currWep ) || self.ammoStock != self getWeaponAmmoStock( self.currWep ) || self.currWep != self getCurrentWeapon() ){
 			self.currWep = self getCurrentWeapon();
@@ -250,6 +263,9 @@ ammoHUDThink( xPos, yPos, margin ){
 }
 
 moneyHUD(){
+	self endon("disconnect");
+	self endon("death");
+
 	self.money = level.config["PLAYER_START_MONEY"];
 	self.oldMoney = self.money;
 
@@ -282,6 +298,9 @@ moneyHUD(){
 }
 
 moneyHUDThink(){
+	self endon("disconnect");
+	self endon("death");
+
 	for( ;; ){
 		if( self.oldMoney != self.money ){
 			self.moneyHUD setText( "$  " + self.money );
@@ -296,7 +315,7 @@ moneyHUDThink(){
 scoreHUD(){
 	self endon("disconnect");
 
-	if( isDefined(self.hud.score) )
+	if( isDefined(self.HUDscore) )
 		return;
 
 	self notifyOnPlayerCommand("showHost", "+scores");
@@ -305,11 +324,11 @@ scoreHUD(){
 	for(;;)
 	{
 		self waittill("showHost");
-		self.hud.score = self createFontString("hudmedium", 1.4);
-		self.hud.score setPoint("BOTTOMLEFT", "BOTTOMLEFT", 85, -25);
-		self.hud.score setText( level.hostname );
+		self.HUDscore = self createFontString("hudmedium", 1.4);
+		self.HUDscore setPoint("BOTTOMLEFT", "BOTTOMLEFT", 85, -25);
+		self.HUDscore setText( level.hostname );
 		self waittill("hideHost");
-		self.hud.score destroy();
+		self.HUDscore destroy();
 	}
 }
 
@@ -432,6 +451,9 @@ clockHUD(){
 }
 
 clockHUDThink( xPos, yPos, margin ){
+	self endon("disconnect");
+	self endon("death");
+
 	for( ;; ){
 		seconds = getTimePassed() / 1000;
 		secondsToMinutes = seconds / 60;
@@ -473,6 +495,7 @@ clockHUDThink( xPos, yPos, margin ){
 }
 
 destroyOnDeath(elem){
+	self waittill("disconnect");
 	self waittill("death");
 	elem destroy();
 }
