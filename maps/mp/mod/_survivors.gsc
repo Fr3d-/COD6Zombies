@@ -33,6 +33,7 @@ onPlayerConnect()
 		player.hud_damagefeedback.color = (1,0,0);
 
 		player thread onPlayerSpawned();
+		player thread onDeath();
 		player thread playerConfig();
 		player thread SiempreHumanos();
 	}
@@ -55,8 +56,9 @@ onPlayerSpawned()
 		wait 0.05;
 		self notify("menuresponse", "changeclass", "class1");
 		self thread Superviviente();
-		self thread onDeath();
 		self thread NoIralaMierda();
+
+		self.isAlive = true;
 
 		self thread maps\mp\mod\_HUD::setupHUD();
 		
@@ -72,9 +74,12 @@ onPlayerSpawned()
 
 onDeath()
 {
+	self endon("disconnect");
+
 	for(;;)
 	{
 		self waittill("death");
+		self.isAlive = false;
 		self notify("menuresponse", game["menu_team"], "spectator");
         self allowSpectateTeam( "freelook", true );
         self.sessionstate = "spectator";
