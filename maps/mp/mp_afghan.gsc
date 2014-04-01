@@ -4,6 +4,8 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	thread createMap();
+
 	maps\mp\mp_afghan_precache::main();
 	maps\createart\mp_afghan_art::main();
 	//maps\mp\mp_afghan_fx::main();
@@ -14,14 +16,16 @@ main(){
 
 	setdvar( "compassmaxrange", "3000" );
 
-	//ambientPlay( "ambient_mp_desert" );
+	ambientPlay( "ambient_mp_desert" );
 
 	setdvar( "r_lightGridEnableTweaks", 1 );
 	setdvar( "r_lightGridIntensity", 1.2 );
 	setdvar( "r_lightGridContrast", 0 ); 
+}
 
+createMap(){
 	level waittill("createMap");
-	
+
 	switch( 0 )
 	{
 		case 0:

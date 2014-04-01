@@ -4,6 +4,7 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	thread createMap();
 	maps\mp\mp_estate_precache::main();
 	maps\createart\mp_estate_art::main();
 	// maps\mp\mp_estate_fx::main();
@@ -34,6 +35,9 @@ main(){
 	level.lugares[0] = (2027,5098,-65);
 	level.lugares[1] = (1446,5128,-106);
 	level.lugares[2] = (2204,5021,-50);
+}
+
+createMap(){
 	CreateMinigun((1907,3878,73),"pavelow_minigun_mp",(0,71,0));
 	CreateMinigun((937,4208,146),"pavelow_minigun_mp",(0,49,0));
 
