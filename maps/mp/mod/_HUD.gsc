@@ -11,6 +11,7 @@ setupHUD(){
 	self thread ammoHUD();
 	self thread moneyHUD();
 	self thread scoreHUD();
+	self thread clockHUD();
 }
 
 waveHUD(){
@@ -309,6 +310,165 @@ scoreHUD(){
 		self.hud.score setText( level.hostname );
 		self waittill("hideHost");
 		self.hud.score destroy();
+	}
+}
+
+clockHUD(){
+	self endon("disconnect");
+	self endon("death");
+
+	xPos = -50;
+	yPos = 0;
+
+	margin = 5;
+
+	self.clockMHUD = newClientHudElem( self );
+	self.clockMHUD.alignX = "noscale";
+	self.clockMHUD.alignY = "noscale";
+	self.clockMHUD.horzAlign = "center";
+	self.clockMHUD.vertAlign = "bottom";
+	self.clockMHUD.x = xPos + 16 + margin;
+	self.clockMHUD.y = yPos;
+	self.clockMHUD.foreground = true;
+	self.clockMHUD.fontScale = 1.5;
+	self.clockMHUD.font = "objective";
+	self.clockMHUD.alpha = 1;
+	self.clockMHUD.glow = 1;
+	self.clockMHUD.glowColor = ( 0, 1, 0 );
+	self.clockMHUD.glowAlpha = 0;
+	self.clockMHUD.color = ( 1.0, 1.0, 0 );
+	self.clockMHUD.hideWhenInMenu = true;
+	self.clockMHUD setValue( 0 );
+
+	self.clockHUDSeperator = newClientHudElem( self );
+	self.clockHUDSeperator.alignYnX = "noscale";
+	self.clockHUDSeperator.alignY = "noscale";
+	self.clockHUDSeperator.horzAlign = "center";
+	self.clockHUDSeperator.vertAlign = "bottom";
+	self.clockHUDSeperator.x = xPos + 16 + margin + 10;
+	self.clockHUDSeperator.y = yPos;
+	self.clockHUDSeperator.foreground = true;
+	self.clockHUDSeperator.fontScale = 1.5;
+	self.clockHUDSeperator.font = "objective";
+	self.clockHUDSeperator.alpha = 1;
+	self.clockHUDSeperator.glow = 1;
+	self.clockHUDSeperator.glowColor = ( 0, 1, 0 );
+	self.clockHUDSeperator.glowAlpha = 0;
+	self.clockHUDSeperator.color = ( 1.0, 1.0, 0 );
+	self.clockHUDSeperator.hideWhenInMenu = true;
+	self.clockHUDSeperator setText(":");
+
+	self.clockSHUD = newClientHudElem( self );
+	self.clockSHUD.alignYnX = "noscale";
+	self.clockSHUD.alignY = "noscale";
+	self.clockSHUD.horzAlign = "center";
+	self.clockSHUD.vertAlign = "bottom";
+	self.clockSHUD.x = xPos + 16 + margin + 10 + 5;
+	self.clockSHUD.y = yPos;
+	self.clockSHUD.foreground = true;
+	self.clockSHUD.fontScale = 1.5;
+	self.clockSHUD.font = "objective";
+	self.clockSHUD.alpha = 1;
+	self.clockSHUD.glow = 1;
+	self.clockSHUD.glowColor = ( 0, 1, 0 );
+	self.clockSHUD.glowAlpha = 0;
+	self.clockSHUD.color = ( 1.0, 1.0, 0 );
+	self.clockSHUD.hideWhenInMenu = true;
+	self.clockSHUD setText( 0 );
+
+	self.clockSSHUD = newClientHudElem( self );
+	self.clockSSHUD.alignYnX = "noscale";
+	self.clockSSHUD.alignY = "noscale";
+	self.clockSSHUD.horzAlign = "center";
+	self.clockSSHUD.vertAlign = "bottom";
+	self.clockSSHUD.x = xPos + 16 + margin + 10 + 5 + 10;
+	self.clockSSHUD.y = yPos;
+	self.clockSSHUD.foreground = true;
+	self.clockSSHUD.fontScale = 1.5;
+	self.clockSSHUD.font = "objective";
+	self.clockSSHUD.alpha = 1;
+	self.clockSSHUD.glow = 1;
+	self.clockSSHUD.glowColor = ( 0, 1, 0 );
+	self.clockSSHUD.glowAlpha = 0;
+	self.clockSSHUD.color = ( 1.0, 1.0, 0 );
+	self.clockSSHUD.hideWhenInMenu = true;
+	self.clockSSHUD setText( 0 );
+
+	self.clockShader = newClientHudElem( self );
+	self.clockShader.alignX = "noscale";
+	self.clockShader.alignY = "noscale";
+	self.clockShader.horzAlign = "center";
+	self.clockShader.vertAlign = "bottom";
+	self.clockShader.x = xPos;
+	self.clockShader.y = yPos + 1;
+	self.clockShader.foreground = true;
+	self.clockShader.alpha = 1;
+	self.clockShader.hideWhenInMenu = true;
+	self.clockShader setShader( "cardicon_compass", 16, 16 );
+	self.clockShader.shader = "cardicon_compass";
+	self.clockShader.color = ( 1, 1, 0 );
+
+	self.clockBGShader = newClientHudElem( self );
+	self.clockBGShader.alignX = "noscale";
+	self.clockBGShader.alignY = "noscale";
+	self.clockBGShader.horzAlign = "center";
+	self.clockBGShader.vertAlign = "bottom";
+	self.clockBGShader.x = xPos - margin;
+	self.clockBGShader.y = yPos + 1 - margin;
+	self.clockBGShader.foreground = false;
+	self.clockBGShader.alpha = .6;
+	self.clockBGShader.hideWhenInMenu = true;
+	self.clockBGShader setShader( "black", 63 + margin, margin + 16 + margin );
+	self.clockBGShader.shader = "black";
+
+	self thread destroyOnDeath( self.clockMHUD );
+	self thread destroyOnDeath( self.clockHUDSeperator );
+	self thread destroyOnDeath( self.clockSHUD );
+	self thread destroyOnDeath( self.clockSSHUD );
+	self thread destroyOnDeath( self.clockShader );
+	self thread destroyOnDeath( self.clockBGShader );
+
+	self thread clockHUDThink( xPos, yPos, margin );
+}
+
+clockHUDThink( xPos, yPos, margin ){
+	for( ;; ){
+		seconds = getTimePassed() / 1000;
+		secondsToMinutes = seconds / 60;
+		minutesInt = int( secondsToMinutes );
+
+		minutesToSeconds = minutesInt * 60;
+
+		restSeconds = int( seconds - minutesToSeconds );
+
+		seconds = int( restSeconds / 10 );
+		sSeconds = restSeconds % 10;
+
+		self.clockHUDSeperator.x = xPos + 16 + margin + 10;
+		self.clockSHUD.x = xPos + 16 + margin + 10 + 5;
+		self.clockSSHUD.x = xPos + 16 + margin + 10 + 5 + 10;
+
+		if( minutesInt == 1 ){
+			self.clockHUDSeperator.x = self.clockHUDSeperator.x - 3;
+			self.clockSHUD.x = self.clockSHUD.x - 3;
+			self.clockSSHUD.x = self.clockSSHUD.x - 3;
+		}
+
+		if( seconds == 1 ){
+			self.clockSSHUD.x = self.clockSSHUD.x - 3;
+		}
+
+		if( restSeconds < 0 ){
+			self.clockMHUD setValue( 0 );
+			self.clockSHUD setValue( 0 );
+			self.clockSSHUD setValue( 0 );
+		} else {
+			self.clockMHUD setValue( minutesInt );
+			self.clockSHUD setValue( seconds );
+			self.clockSSHUD setValue( sSeconds );
+		}
+
+		wait .1;
 	}
 }
 

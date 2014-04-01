@@ -14,7 +14,7 @@ main(){
 	precacheShader("hudicon_neutral");
 	precacheShader("cardicon_fmj");
 	precacheShader("cardtitle_hazard_3");
-	precacheShader("cardtitle_zombie_3");
+	precacheShader("cardicon_compass");
 	precacheShader("cardicon_biohazard");
 	precacheShader("ui_cursor");
 
