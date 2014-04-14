@@ -10,11 +10,15 @@ testBind()
 {
     self endon ( "disconnect" );
 
+    i = 0;
+
     self notifyOnPlayerCommand("F1", "+test");
     for(;;)
     {
             self waittill("F1");
-            self test();    
+            self setModel( level.models[i] );
+            iPrintLn( level.models[i] );
+            i++;
        
     }
 }
@@ -209,36 +213,6 @@ Zombiesconvida()
 	return level.ztotal - level.zkilled;
 }
 
-Destruirhud(algo)
-{
-	self waittill("death");
-	algo destroy();
-}
-
-Destruirhudr(algo)
-{
-	self waittill("spawned_player");
-	algo destroy();
-}
-
-GraficoCoseno(texto)
-{
-        h = NewClientHudElem(self);
-        h.alignX = "center";h.alignY = "middle";h.horzAlign = "center";h.vertAlign = "middle";
-        h.fontscale = 0.75;
-        h.font = "hudbig";
-        h.x -= (texto.size+870)*1.45;
-        h settext(texto);
-        for(i=0;i<720;i+=4.5)
-        {
-                h moveovertime(0.1);
-                h.y=cos(i*2)*100;
-                h.x += (texto.size+870)*0.01875;
-                wait 0.1;
-        }
-        h destroy();
-}
-
 DesegundosaTiempo(sec)
 {
         	seconds = sec;
@@ -341,24 +315,6 @@ PlayRandomShellshocks()
 	}
 }
 
-CreateMinigun(pos,weapon,angles)
-{
-     	mgTurret = spawnTurret( "misc_turret", pos, weapon );
-     	mgTurret.angles = angles; 
-     	mgTurret setModel( "weapon_minigun" );
-	wait 0.01;
-}
-
-CreateBlock(pos, angle)
-{
-	block = spawn("script_model", pos );
-	block setModel("com_plasticcase_friendly");
-	block.angles = angle;
-	block Solid();
-	block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-	wait 0.01;
-}
-
 CreateFXonPos(pos,fx)
 {
         	playFX(fx, pos);
@@ -370,177 +326,4 @@ Millonario()
 {
 	level._effect["money"] = loadfx ("props/cash_player_drop");
 	PlayFx(level._effect["money"],self.origin);
-}
-
-CreateGrids(corner1, corner2, angle)
-{
-	W = Distance((corner1[0], 0, 0), (corner2[0], 0, 0));
-	L = Distance((0, corner1[1], 0), (0, corner2[1], 0));
-	H = Distance((0, 0, corner1[2]), (0, 0, corner2[2]));
-	CX = corner2[0] - corner1[0];
-	CY = corner2[1] - corner1[1];
-	CZ = corner2[2] - corner1[2];
-	ROWS = roundUp(W/55);
-	COLUMNS = roundUp(L/30);
-	HEIGHT = roundUp(H/20);
-	XA = CX/ROWS;
-	YA = CY/COLUMNS;
-	ZA = CZ/HEIGHT;
-	center = spawn("script_model", corner1);
-	for(r = 0; r <= ROWS; r++){
-		for(c = 0; c <= COLUMNS; c++){
-			for(h = 0; h <= HEIGHT; h++){
-				block = spawn("script_model", (corner1 + (XA * r, YA * c, ZA * h)));
-				block setModel("com_plasticcase_friendly");
-				block.angles = (0, 0, 0);
-				block Solid();
-				block LinkTo(center);
-				block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-				wait 0.01;
-			}
-		}
-	}
-	center.angles = angle;
-}
-
-roundUp( floatVal )
-{
-	if ( int( floatVal ) != floatVal )
-		return int( floatVal+1 );
-	else
-		return int( floatVal );
-}
-
-PoliceBarrier(pos,angle)
-{
-	barrier = spawn("script_model",pos);
-	barrier setModel("police_barrier_01_dlc2");
-	barrier.angles = angle;
-	barrier Solid();
-	barrier CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-	wait 0.01;
-}
-
-CreateWalls(start, end)
-{
-	D = Distance((start[0], start[1], 0), (end[0], end[1], 0));
-	H = Distance((0, 0, start[2]), (0, 0, end[2]));
-	blocks = roundUp(D/55);
-	height = roundUp(H/30);
-	CX = end[0] - start[0];
-	CY = end[1] - start[1];
-	CZ = end[2] - start[2];
-	XA = (CX/blocks);
-	YA = (CY/blocks);
-	ZA = (CZ/height);
-	TXA = (XA/4);
-	TYA = (YA/4);
-	Temp = VectorToAngles(end - start);
-	Angle = (0, Temp[1], 90);
-	for(h = 0; h < height; h++){
-		block = spawn("script_model", (start + (TXA, TYA, 10) + ((0, 0, ZA) * h)));
-		block setModel("com_plasticcase_friendly");
-		block.angles = Angle;
-		block Solid();
-		block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-		wait 0.001;
-		for(i = 1; i < blocks; i++){
-			block = spawn("script_model", (start + ((XA, YA, 0) * i) + (0, 0, 10) + ((0, 0, ZA) * h)));
-			block setModel("com_plasticcase_friendly");
-			block.angles = Angle;
-			block Solid();
-			block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-			wait 0.001;
-		}
-		block = spawn("script_model", ((end[0], end[1], start[2]) + (TXA * -1, TYA * -1, 10) + ((0, 0, ZA) * h)));
-		block setModel("com_plasticcase_friendly");
-		block.angles = Angle;
-		block Solid();
-		block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-		wait 0.001;
-	}
-}
-
-CreateInvWalls(start, end)
-{
-	D = Distance((start[0], start[1], 0), (end[0], end[1], 0));
-	H = Distance((0, 0, start[2]), (0, 0, end[2]));
-	blocks = roundUp(D/55);
-	height = roundUp(H/30);
-	CX = end[0] - start[0];
-	CY = end[1] - start[1];
-	CZ = end[2] - start[2];
-	XA = (CX/blocks);
-	YA = (CY/blocks);
-	ZA = (CZ/height);
-	TXA = (XA/4);
-	TYA = (YA/4);
-	Temp = VectorToAngles(end - start);
-	Angle = (0, Temp[1], 90);
-	for(h = 0; h < height; h++){
-		block = spawn("script_model", (start + (TXA, TYA, 10) + ((0, 0, ZA) * h)));
-		block.angles = Angle;
-		block Solid();
-		block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-		wait 0.001;
-		for(i = 1; i < blocks; i++){
-			block = spawn("script_model", (start + ((XA, YA, 0) * i) + (0, 0, 10) + ((0, 0, ZA) * h)));
-			block.angles = Angle;
-			block Solid();
-			block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-			wait 0.001;
-		}
-		block = spawn("script_model", ((end[0], end[1], start[2]) + (TXA * -1, TYA * -1, 10) + ((0, 0, ZA) * h)));
-		block.angles = Angle;
-		block Solid();
-		block CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-		wait 0.001;
-	}
-}
-
-createRectangle( align, relative, x, y, width, height, elem, color, alpha, sort )
-{
-        	barElemBG = newClientHudElem( self );
-        	barElemBG.elemType = "bar";
-        	if( !level.splitScreen )
-        	{
-                	barElemBG.x = -2;
-                	barElemBG.y = -2;
-        	}
-        	barElemBG.width = width;
-        	barElemBG.height = height;
-        	barElemBG.align = align;
-        	barElemBG.relative = relative;
-        	barElemBG.xOffset = 0;
-        	barElemBG.yOffset = 0;
-        	barElemBG.children = [];
-        	barElemBG.sort = sort;
-        	barElemBG.color = color;
-        	barElemBG.alpha = alpha;
-        	barElemBG setParent( level.uiParent );
-        	barElemBG setShader( elem, width , height );
-        	barElemBG.hidden = false;
-        	barElemBG setPoint( align, relative, x, y );
-        	return barElemBG;
-}
-
-Bog(pos,angle)
-{
-	barrier = spawn("script_model",pos);
-	barrier setModel("foliage_cod5_tallgrass10b");
-	barrier.angles = angle;
-	barrier Solid();
-	barrier CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
-	PlayFX(level._effect[ "fog_ground_200_heavy_rundown" ],pos+(0,0,3));
-	PlayFX(level._effect[ "fog_ground_200_heavy_rundown" ],pos+(0,0,10));
-	wait 0.01;
-}
-
-isWallBang( attacker, victim ) //By BraX
-{
-	start = attacker getEye();
-	end = victim getEye();
-	if( bulletTracePassed( start, end, false, attacker ) )
-		return false;
-	return true;
 }
