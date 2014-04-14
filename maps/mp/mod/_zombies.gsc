@@ -304,7 +304,7 @@ mapBounds(i)
 			self.body delete();
 			break;
 		}
-		if((self.origin[2] < 0) && (getDvar("mapname") == "mp_underpass"))
+		if((self.origin[2] < -20) && (getDvar("mapname") == "mp_underpass"))
 		{
 			self notify("death");
 			self delete();
