@@ -36,7 +36,7 @@ Oleadas()
 	switch(level.ola)
 	{
 		case 1:
-			level.ztotal[level.ola] = 1;
+			level.ztotal[level.ola] = 10;
 			level thread createZombies(level.ztotal[level.ola],100);
 		break;
 
@@ -428,6 +428,12 @@ NoBajoMapa(i)
 			self.body delete();
 			break;
 		}
+		if((self.origin[2] < -250) && (getDvar("mapname") == "mp_quarry"))
+		{
+			self delete();
+			self.body delete();
+			break;
+		}
 	wait 0.05;
 	}
 }
@@ -450,7 +456,7 @@ PrepararNuevaOleada()
 				}
 				wait 0.05;
 			}
-			wait 30;
+			wait 15;
 			iprintlnbold("^1New Wave");
 			level.ola ++;
 			level thread Oleadas();

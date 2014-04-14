@@ -38,7 +38,6 @@ createMap(){
 	      					ents[index].origin = (0, 0, 9999999);
 	  			}	
 			level.reaparicion = (-1962,11034,-1794);
-			level.pared = 0;
 			level.lugares = []; 
 			level.lugares[0] = (1028,12326,-1955); 
 			level.lugares[1] = (1101,12428,-1949); 
