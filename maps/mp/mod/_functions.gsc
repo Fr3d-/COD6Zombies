@@ -20,7 +20,7 @@ testBind()
 }
 
 test(){
-	getTimePassed();
+	iPrintLn(self getPlayerAngles() );
 	//exitLevel( false );
 }
 
@@ -202,18 +202,11 @@ vector_scal(vec, scale)
 
 Zombiesconvida()
 {
-	numeroz = 0;
-
-	if( !isDefined(level.ztotal) && !isDefined(level.ola) ){
-		return numeroz;
+	if( !isDefined(level.ztotal) && !isDefined(level.wave) ){
+		return 0;
 	}
 
-	for(i = 0; i < level.ztotal[level.ola]; i++)
-	{
-		if( isDefined(level.zombis[i]) && level.zombis[i].isAlive)
-			numeroz++;
-	}
-	return numeroz;
+	return level.ztotal - level.zkilled;
 }
 
 Destruirhud(algo)
