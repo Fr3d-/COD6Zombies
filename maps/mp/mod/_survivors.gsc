@@ -45,6 +45,7 @@ playerConfig(){
 onPlayerSpawned()
 {
 	self endon( "disconnect" );
+	self.money = level.config["PLAYER_START_MONEY"];
 
 	for(;;)
 	{
@@ -60,7 +61,6 @@ onPlayerSpawned()
 		self thread mapBounds();
 
 		self.isAlive = true;
-		self.money = level.config["PLAYER_START_MONEY"];
 
 		self.speed = 0;
 		self.jugger = 0;
