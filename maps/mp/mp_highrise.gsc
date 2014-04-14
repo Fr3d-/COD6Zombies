@@ -4,6 +4,8 @@
 #include maps\mp\mod\_maptools;
 
 main(){
+	thread spawnMap();
+	
 	maps\mp\mp_highrise_precache::main();
 	maps\createart\mp_highrise_art::main();
 	//maps\mp\mp_highrise_fx::main();
@@ -23,6 +25,9 @@ main(){
 	level.airstrikeHeightScale = 3;
 
 	setdvar( "compassmaxrange", "2100" );
+}
+
+spawnMap(){
 	level waittill("createMap");
 	
 	level.cuerpo = "mp_body_airborne_shotgun_c";
