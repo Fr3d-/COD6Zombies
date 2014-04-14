@@ -4,11 +4,6 @@
 #include common_scripts\utility;
 #using_animtree( "multiplayer" );
 
-////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////
-////////////////////Humans////////////////////////
-////////////////////////////////////////////////////////
-
 main()
 {
 	level thread onPlayerConnect();
@@ -28,10 +23,16 @@ onPlayerConnect()
 
 		player.hud_damagefeedback.color = (1,0,0);
 
+		player notify("menuresponse", game["menu_team"], "allies");
+		if(level.gameState == "intermission" || level.gameState == "starting")
+		{
+			player notify("menuresponse", game["menu_team"], "allies");
+		}
+
 		player thread onPlayerSpawned();
 		player thread onDeath();
 		player thread playerConfig();
-		player thread SiempreHumanos();
+		player thread alwaysSurvivor();
 	}
 }
 
@@ -48,11 +49,15 @@ onPlayerSpawned()
 	for(;;)
 	{
 		self waittill( "spawned_player" );
+
 		self notify("menuresponse", game["menu_team"], "allies");
 		wait 0.05;
 		self notify("menuresponse", "changeclass", "class1");
-		self thread Superviviente();
-		self thread NoIralaMierda();
+
+		self setSpawnPoint();
+
+		self thread survivor();
+		self thread mapBounds();
 
 		self.isAlive = true;
 		self.money = level.config["PLAYER_START_MONEY"];
@@ -91,7 +96,13 @@ onDeath()
 	}
 }
 
-NoIralaMierda()
+setSpawnPoint(){
+	self setOrigin(level.reaparicion+(randomInt(50),randomInt(50),0));
+	self.health = 100;
+	self.maxhealth = 100;
+}
+
+mapBounds()
 {
 	while(1)
 	{
@@ -128,7 +139,7 @@ NoIralaMierda()
 }
 
 
-SiempreHumanos()
+alwaysSurvivor()
 {
 	while(1)
 	{
@@ -147,7 +158,7 @@ SiempreHumanos()
 	}
 }
 
-Superviviente()
+survivor()
 {
 	self TakeAllWeapons();
 	self _ClearPerks();

@@ -50,7 +50,7 @@ waveHUD(){
 	if( self.HUDcurrZombies == 0 )
 		self.waveHUD.color = ( 1, 0, 0 );
 	else
-		self.waveHUD.color = ( 1, ( self.HUDcurrZombies / level.ztotal[level.ola]), 0 );
+		self.waveHUD.color = ( 1, ( self.HUDcurrZombies / level.ztotal), 0 );
 
 	self.waveHUD.hideWhenInMenu = true;
 	self.waveHUD setValue( self.HUDcurrZombies );
@@ -71,7 +71,7 @@ waveHUD(){
 	if( self.HUDcurrZombies == 0 )
 		self.waveShader.color = ( 1, 0, 0 );
 	else
-		self.waveShader.color = ( 1, ( self.HUDcurrZombies / level.ztotal[level.ola]), 0 );
+		self.waveShader.color = ( 1, ( self.HUDcurrZombies / level.ztotal), 0 );
 
 	margin = 5;
 
@@ -105,8 +105,8 @@ waveHUDThink(){
 		if( self.HUDcurrZombies != self.HUDoldZombies ){
 
 			self.waveHUD setValue( self.HUDcurrZombies );
-			self.waveHUD.color = ( 1, ( (self.HUDcurrZombies / level.ztotal[level.ola])), 0 );
-			self.waveShader.color = ( 1, ( (self.HUDcurrZombies / level.ztotal[level.ola])), 0 );
+			self.waveHUD.color = ( 1, ( (self.HUDcurrZombies / level.ztotal)), 0 );
+			self.waveShader.color = ( 1, ( (self.HUDcurrZombies / level.ztotal)), 0 );
 
 			self.HUDoldZombies = self.HUDcurrZombies;
 		}

@@ -5,114 +5,9 @@
 #include common_scripts\utility;
 #using_animtree( "multiplayer" );
 
-main()
+createZombies( i, count, health )
 {
-	level thread init();
-	level thread onPlayerConnect();
-}
-
-init()
-{
-	level.contador = createServerFontString( "objective", 1.7, "allies" );
-	level.contador setPoint("","",0,-190);
-	level.contador.color = (1,0,0.4);
-	level.contadort = 3;
-	for(i = level.contadort; i > 0; i --)
-	{
-		level.contador setText("Zombies coming in:" + i);
-		wait 1;
-	}
-	level thread NukeQuake();
-	level.contador destroy();
-	iPrintlnBold("^1Zombies Incoming");
-	level notify("nuevaola");
-	level.ola = 1;
-	level thread Oleadas();
-	level thread PrepararNuevaOleada();
-}
-
-Oleadas()
-{
-	switch(level.ola)
-	{
-		case 1:
-			level.ztotal[level.ola] = 10;
-			level thread createZombies(level.ztotal[level.ola],100);
-		break;
-
-		case 2:
-			level.ztotal[level.ola] = 15;
-			level thread createZombies(level.ztotal[level.ola],150);
-		break;
-
-		case 3:
-			level.ztotal[level.ola] = 25;
-			level thread createZombies(level.ztotal[level.ola],200);
-		break;
-
-		case 4:
-			level.ztotal[level.ola] = 35;
-			level thread createZombies(level.ztotal[level.ola],250);
-		break;
-
-		case 5:
-			level.ztotal[level.ola] = 45;
-			level thread createZombies(level.ztotal[level.ola],300);
-		break;
-
-		case 6:
-			level.ztotal[level.ola] = 55;
-			level thread createZombies(level.ztotal[level.ola],300);
-		break;
-
-		case 7:
-			level.ztotal[level.ola] = 60;
-			level thread createZombies(level.ztotal[level.ola],400);
-		break;
-
-		case 8:
-			level.ztotal[level.ola] = 65;
-			level thread createZombies(level.ztotal[level.ola],450);
-		break;
-
-		case 9:
-			level.ztotal[level.ola] = 75;
-			level thread createZombies(level.ztotal[level.ola],500);
-		break;
-
-		case 10:
-			level.ztotal[level.ola] = 75;
-			level thread createZombies(level.ztotal[level.ola],550);
-		break;
-
-		case 11:
-			level.ztotal[level.ola] = 60;
-			level thread createZombies(level.ztotal[level.ola],600);
-		break;
-
-		case 12:
-			level.ztotal[level.ola] = 70;
-			level thread createZombies(level.ztotal[level.ola],650);
-		break;
-
-		case 13:
-			level.ztotal[level.ola] = 75;
-			level thread createZombies(level.ztotal[level.ola],800);
-		break;
-
-		case 14:
-			level.ztotal[level.ola] = 1;
-			level thread createZombies(level.ztotal[level.ola],50000);
-		break;
-
-		case 15:
-		break;
-	}
-}
-
-createZombies(numero,vidaola)
-{
-	for(i=0;i<numero;i++)
+	for( ; i < count; i++ )
 	{
 		level.zombis[i] = spawn("script_model", level.lugares[RandomInt(level.lugares.size)] + (randomInt(100),randomInt(100),0));
 		level.zombis[i] setModel(level.cuerpo);
@@ -133,17 +28,24 @@ createZombies(numero,vidaola)
 		//level.zombis[i].body.lifeId = 1;
     	level.zombis[i].body setcandamage(true);
 		level.zombis[i].body physicsLaunchServer((0,0,0), (0,0,0));
-		level.zombis[i].body.health = vidaola;
+		level.zombis[i].body.health = health;
 		level.zombis[i].body linkto( level.zombis[i] );
 
-		level.zombis[i] thread Velocidades(i);
+		level.zombis[i] thread animations(i);
 
 		level.zombis[i] thread findAndMoveToPlayer(i);
 
-		level.zombis[i] thread VidadeZombies(i);
-		level.zombis[i] thread Matar(i);
-		level.zombis[i] thread NoBajoMapa(i);
+		level.zombis[i] thread watchZombie(i);
+		level.zombis[i] thread attack(i);
+		level.zombis[i] thread mapBounds(i);
+		level.zombis[i] thread onDeath(i);
 	}
+}
+
+onDeath(){
+	self waittill("death");
+	level.zkilled++;
+	level maps\mp\mod\_waves::addZombieToWave();
 }
 
 findAndMoveToPlayer(i)
@@ -183,7 +85,7 @@ findAndMoveToPlayer(i)
 
 }
 
-Velocidades(i)
+animations(i)
 {
 	switch( randomInt(9) )
 	{
@@ -229,7 +131,7 @@ Velocidades(i)
 	self.currAnim = self.defAnim;
 }
 
-VidadeZombies(i)
+watchZombie(i)
 {
 	while(1)
 	{
@@ -291,7 +193,7 @@ doAnimation( _anim, ply )
 	self.doingAnimation = false;
 }
 
-Matar(i)
+attack(i)
 {
 	self endon("death");
 
@@ -327,194 +229,130 @@ Matar(i)
 	}
 }
 
-NoBajoMapa(i)
+mapBounds(i)
 {
 	self endon("death");
 	for(;;)
 	{
 		if((self.origin[2] < -2000) && (getDvar("mapname") == "mp_afghan") && level.edicion == 0)
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -3500) && (getDvar("mapname") == "mp_afghan") && level.edicion == 1)
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -50) && (getDvar("mapname") == "mp_derail"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -130) && (getDvar("mapname") == "mp_estate"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 6000) && (getDvar("mapname") == "mp_fuel2"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -20) && (getDvar("mapname") == "mp_trailerpark"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 3198) && (getDvar("mapname") == "mp_highrise"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 63) && (getDvar("mapname") == "mp_invasion"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -100) && (getDvar("mapname") == "mp_brecourt"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -120) && (getDvar("mapname") == "mp_rundown"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 200) && (getDvar("mapname") == "mp_underpass"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < 30) && (getDvar("mapname") == "mp_compact"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -250) && (getDvar("mapname") == "mp_overgrown"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}	
 		if((self.origin[2] < -20) && (getDvar("mapname") == "mp_abandon"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -800) && (getDvar("mapname") == "mp_rust"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -200) && (getDvar("mapname") == "mp_boneyard"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 		if((self.origin[2] < -250) && (getDvar("mapname") == "mp_quarry"))
 		{
+			self notify("death");
 			self delete();
 			self.body delete();
 			break;
 		}
 	wait 0.05;
-	}
-}
-
-PrepararNuevaOleada()
-{
-	while(1)
-	{
-		if(maps\mp\mod\_functions::Zombiesconvida() <= 0)
-		{
-			iprintlnbold("^1Humans Have survived the Wave");
-			foreach(jugador in level.players)
-			{
-				jugador maps\mp\perks\_perks::givePerk( "frag_grenade_mp" );
-				if(jugador.tieneque == 1)
-				{
-					jugador notify("menuresponse", game["menu_team"], "allies");
-					jugador allowSpectateTeam( "freelook", false );
-					jugador.tieneque = 0;
-				}
-				wait 0.05;
-			}
-			wait 15;
-			iprintlnbold("^1New Wave");
-			level.ola ++;
-			level thread Oleadas();
-			if(level.ola == 15)
-			{
-			       	maps\mp\gametypes\_gamelogic::endGame( "allies", "^5The Humans Survived" );
-			}
-		}
-	wait 0.08;
-	}
-}
-			
-onPlayerConnect()
-{
-	for(;;)
-	{
-		level waittill( "connected", player );
-
-		player thread onPlayerSpawned();
-		player thread UnirseaAliados();
-		level thread HumanosDevorados();
-	}
-}
-
-UnirseaAliados()
-{
-	self notify("menuresponse", game["menu_team"], "allies");
-	if(level.gameState == "intermission" || level.gameState == "starting")
-	{
-		self notify("menuresponse", game["menu_team"], "allies");
-	}
-}
-
-HumanosDevorados()
-{
-       	winner = "axis";
-	wait 5;
-	while( 1 )
-	{
-		players = maps\mp\gametypes\_teams::CountPlayers();
-		if(players["allies"] == 0) 
-		{
-       			maps\mp\gametypes\_gamelogic::endGame( winner, "^1The zombies devorated the Humans" );
-		}
-	wait 0.05;
-	}
-}
-
-onPlayerSpawned()
-{
-	self endon( "disconnect" );
-
-	for(;;)
-	{
-		self waittill( "spawned_player" );
-		self setOrigin(level.reaparicion+(randomInt(50),randomInt(50),0));
-		self.health = 100;
-		self.maxhealth = 100;
-		//self thread Coordinates();
 	}
 }

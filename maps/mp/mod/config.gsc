@@ -1,4 +1,7 @@
 main(){
+	level.config["WAVE_MAX_ZOMBIES"] = 25; // Tweak for perfomance
+	level.config["WAVE_DELAY"] = 20;
+
 	level.config["ZOMBIE_ATTACK_RANGE"] = 5000;
 	level.config["ZOMBIE_ATTACK_DAMAGE"] = 20;
 
